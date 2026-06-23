@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { SearchNormal1, Edit, Notification, Add, CloseCircle } from 'iconsax-react';
+import { SearchNormal1, Edit, Notification, CloseCircle } from 'iconsax-react';
 
 interface NavbarProps {
   onSignIn?: () => void;

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
-  Heart, HeartAdd, Message, Save2, Share, More, ArrowLeft,
-  ClipboardText, Link1,
+  Heart, HeartAdd, Message, Save2, Share, More, ArrowLeft, Link1,
 } from 'iconsax-react';
 import PageTemplate from '../components/PageTemplate';
 import ArticleCard from '../components/ArticleCard';
 import { ARTICLES, formatClaps } from '../data/mockData';
+import { getUserArticles } from '../data/articleStore';
 
 interface ArticlePageProps {
   isLoggedIn: boolean;
@@ -16,7 +16,8 @@ interface ArticlePageProps {
 export default function ArticlePage({ isLoggedIn, onAuthChange }: ArticlePageProps) {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const article = ARTICLES.find(a => a.id === id);
+  // Look up in mock articles first, then user-created articles
+  const article = ARTICLES.find(a => a.id === id) ?? getUserArticles().find(a => a.id === id);
 
   const [claps, setClaps] = useState(0);
   const [clapped, setClapped] = useState(false);
@@ -60,12 +61,15 @@ export default function ArticlePage({ isLoggedIn, onAuthChange }: ArticlePagePro
     );
   }
 
-  // Parse basic HTML-like body
+  // Render Quill HTML directly (it's already valid HTML)
   const renderBody = (html: string) => {
+    // If the body contains HTML tags (from Quill), render as-is.
+    // Otherwise fall back to simple paragraph splitting for mock data.
+    const isQuillHtml = /<[a-z][\s\S]*>/i.test(html);
+    if (isQuillHtml) {
+      return { __html: html };
+    }
     return { __html: html
-      .replace(/<h2>(.*?)<\/h2>/g, '<h2>$1</h2>')
-      .replace(/<h3>(.*?)<\/h3>/g, '<h3>$1</h3>')
-      .replace(/<blockquote>(.*?)<\/blockquote>/g, '<blockquote>$1</blockquote>')
       .replace(/\n\n/g, '</p><p>')
       .replace(/^/, '<p>')
       .replace(/$/, '</p>')

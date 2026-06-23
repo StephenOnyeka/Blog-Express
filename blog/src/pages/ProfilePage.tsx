@@ -4,6 +4,7 @@ import { Edit, Link1, People } from 'iconsax-react';
 import PageTemplate from '../components/PageTemplate';
 import ArticleCard from '../components/ArticleCard';
 import { AUTHORS, ARTICLES } from '../data/mockData';
+import { getUserArticles, CURRENT_USER as ME } from '../data/articleStore';
 
 interface ProfilePageProps {
   isLoggedIn: boolean;
@@ -19,12 +20,12 @@ export default function ProfilePage({ isLoggedIn, onAuthChange }: ProfilePagePro
   const author = isOwn
     ? {
         id: 'me',
-        name: 'You',
+        name: ME.name,
         username: 'me',
-        avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=me&backgroundColor=ffd5dc',
-        bio: 'Your bio goes here. Tell the world what you write about.',
-        followers: 0,
-        following: 0,
+        avatar: ME.avatar,
+        bio: ME.bio,
+        followers: ME.followers,
+        following: ME.following,
       }
     : AUTHORS.find(a => a.username === username);
 
@@ -39,8 +40,9 @@ export default function ProfilePage({ isLoggedIn, onAuthChange }: ProfilePagePro
     );
   }
 
+  // For the "me" profile, load fresh from localStorage on each render
   const authorArticles = isOwn
-    ? ARTICLES.slice(0, 3)
+    ? getUserArticles()
     : ARTICLES.filter(a => a.author.username === username);
 
   return (

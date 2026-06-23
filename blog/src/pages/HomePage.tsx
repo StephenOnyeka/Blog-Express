@@ -4,6 +4,7 @@ import PageTemplate from '../components/PageTemplate';
 import ArticleCard from '../components/ArticleCard';
 import Sidebar from '../components/Sidebar';
 import { ARTICLES, TOPICS } from '../data/mockData';
+import { getUserArticles } from '../data/articleStore';
 
 interface HomePageProps {
   isLoggedIn: boolean;
@@ -13,9 +14,12 @@ interface HomePageProps {
 export default function HomePage({ isLoggedIn, onAuthChange }: HomePageProps) {
   const [activeTopic, setActiveTopic] = useState('For You');
 
+  // Merge user-written articles (newest first) with mock articles
+  const allArticles = [...getUserArticles(), ...ARTICLES];
+
   const filteredArticles = activeTopic === 'For You' || activeTopic === 'Following'
-    ? ARTICLES
-    : ARTICLES.filter(a => a.tags.some(t => t.toLowerCase() === activeTopic.toLowerCase()));
+    ? allArticles
+    : allArticles.filter(a => a.tags.some(t => t.toLowerCase() === activeTopic.toLowerCase()));
 
   return (
     <PageTemplate isLoggedIn={isLoggedIn} onAuthChange={onAuthChange}>
