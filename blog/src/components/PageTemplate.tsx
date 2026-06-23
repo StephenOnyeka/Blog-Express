@@ -6,15 +6,11 @@ import Footer from './Footer';
 interface PageTemplateProps {
   children: ReactNode;
   showFooter?: boolean;
-  isLoggedIn?: boolean;
-  onAuthChange?: (loggedIn: boolean) => void;
 }
 
 export default function PageTemplate({
   children,
   showFooter = true,
-  isLoggedIn = false,
-  onAuthChange,
 }: PageTemplateProps) {
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
@@ -23,15 +19,11 @@ export default function PageTemplate({
 
   const handleAuthSuccess = () => {
     setAuthOpen(false);
-    onAuthChange?.(true);
   };
 
   return (
     <>
-      <Navbar
-        onSignIn={openSignIn}
-        isLoggedIn={isLoggedIn}
-      />
+      <Navbar onSignIn={openSignIn} />
 
       <main style={{ flex: 1 }}>
         {children}

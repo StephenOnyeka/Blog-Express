@@ -1,15 +1,34 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SearchNormal1, Edit, Notification, CloseCircle } from 'iconsax-react';
+import { useAuth } from '../context/AuthContext';
+import { api } from '../lib/api';
 
 interface NavbarProps {
   onSignIn?: () => void;
-  isLoggedIn?: boolean;
 }
 
-export default function Navbar({ onSignIn, isLoggedIn = false }: NavbarProps) {
+export default function Navbar({ onSignIn }: NavbarProps) {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
+  const { isLoggedIn, user } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      const fetchNotifications = async () => {
+        try {
+          const res = await api.get('/notifications/unread-count');
+          setUnreadCount(res.data.count);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchNotifications();
+      const interval = setInterval(fetchNotifications, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [isLoggedIn]);
 
   return (
     <nav className="navbar">
@@ -40,15 +59,18 @@ export default function Navbar({ onSignIn, isLoggedIn = false }: NavbarProps) {
               <button
                 className="navbar-avatar"
                 style={{ position: 'relative' }}
-                onClick={() => navigate('/profile/me')}
                 aria-label="Notifications"
+                onClick={async () => {
+                   await api.patch('/notifications/read-all');
+                   setUnreadCount(0);
+                }}
               >
                 <Notification size={20} color="var(--text-secondary)" />
-                <span className="notification-dot"></span>
+                {unreadCount > 0 && <span className="notification-dot"></span>}
               </button>
-              <Link to="/profile/me" className="navbar-avatar" aria-label="Profile">
+              <Link to={`/profile/${user?.username}`} className="navbar-avatar" aria-label="Profile">
                 <img
-                  src="https://api.dicebear.com/9.x/avataaars/svg?seed=me&backgroundColor=ffd5dc"
+                  src={user?.avatar || "https://api.dicebear.com/9.x/avataaars/svg?seed=me&backgroundColor=ffd5dc"}
                   alt="Your avatar"
                 />
               </Link>
@@ -81,12 +103,27 @@ interface AuthModalProps {
 export function AuthModal({ isOpen, onClose, mode, onToggleMode, onSuccess }: AuthModalProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
+  
+  const { login, register } = useAuth();
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email && password) onSuccess();
+    setError('');
+    try {
+      if (mode === 'signin') {
+        await login({ email, password });
+      } else {
+        await register({ name, username, email, password });
+      }
+      onSuccess();
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'An error occurred');
+    }
   };
 
   return (
@@ -99,25 +136,29 @@ export function AuthModal({ isOpen, onClose, mode, onToggleMode, onSuccess }: Au
           {mode === 'signin' ? 'Welcome back.' : 'Join BlogNest.'}
         </h2>
 
-        <button className="modal-oauth-btn" type="button">
-          <svg width="18" height="18" viewBox="0 0 18 18">
-            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
-            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
-            <path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/>
-            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
-          </svg>
-          Continue with Google
-        </button>
-        <button className="modal-oauth-btn" type="button">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2">
-            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-          </svg>
-          Continue with Facebook
-        </button>
-
-        <div className="modal-divider"><span>or</span></div>
+        {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
 
         <form onSubmit={handleSubmit}>
+          {mode === 'signup' && (
+            <>
+              <input
+                className="modal-input"
+                type="text"
+                placeholder="Full Name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                required
+              />
+              <input
+                className="modal-input"
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+                required
+              />
+            </>
+          )}
           <input
             className="modal-input"
             type="email"

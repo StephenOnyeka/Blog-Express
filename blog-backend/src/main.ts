@@ -1,13 +1,27 @@
 import { NestFactory } from '@nestjs/core';
+import { DataSource } from 'typeorm';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // await app.listen(process.env.PORT ?? 3000);
+  app.setGlobalPrefix('api');
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.enableCors({
     origin: 'http://localhost:5173',
     credentials: true,
   });
   await app.listen(process.env.PORT ?? 5000);
+
+  const dataSource = app.get(DataSource);
+  const reportDbStatus = () => {
+    if (dataSource.isInitialized) {
+      console.log('✅ Database connected');
+    } else {
+      console.log('❌ Database NOT connected — retrying...');
+      setTimeout(reportDbStatus, 3000);
+    }
+  };
+  reportDbStatus();
 }
 bootstrap();
