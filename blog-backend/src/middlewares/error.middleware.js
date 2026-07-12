@@ -1,3 +1,5 @@
+const env = require('../config/env');
+
 const errorMiddleware = (err, req, res, next) => {
   console.error(err);
 
@@ -7,7 +9,7 @@ const errorMiddleware = (err, req, res, next) => {
   res.status(status).json({
     success: false,
     message,
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+    stack: env.NODE_ENV === 'development' ? err.stack : undefined,
   });
 };
 
