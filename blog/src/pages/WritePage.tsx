@@ -41,14 +41,8 @@ const SUGGESTED_TAGS = [
   'Business', 'Finance', 'Productivity', 'Education', 'Travel',
 ];
 
-/* ─── Types ─────────────────────────────────────── */
-interface WritePageProps {
-  isLoggedIn: boolean;
-  onAuthChange: (v: boolean) => void;
-}
-
 /* ─── Component ─────────────────────────────────── */
-export default function WritePage({ isLoggedIn, onAuthChange }: WritePageProps) {
+export default function WritePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const editId = searchParams.get('edit');
@@ -149,7 +143,7 @@ export default function WritePage({ isLoggedIn, onAuthChange }: WritePageProps) 
   /* ── Published success screen ──────────────────── */
   if (published) {
     return (
-      <PageTemplate isLoggedIn={isLoggedIn} onAuthChange={onAuthChange} showFooter={false}>
+      <PageTemplate showFooter={false}>
         <div style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center',
           justifyContent: 'center', minHeight: '70vh', gap: 16, textAlign: 'center', padding: '0 24px',
@@ -187,7 +181,7 @@ export default function WritePage({ isLoggedIn, onAuthChange }: WritePageProps) 
 
   /* ── Editor ─────────────────────────────────────── */
   return (
-    <PageTemplate isLoggedIn={isLoggedIn} onAuthChange={onAuthChange} showFooter={false}>
+    <PageTemplate showFooter={false}>
       {/* Top bar */}
       <div style={{
         position: 'sticky', top: 0, zIndex: 100,

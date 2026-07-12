@@ -1,39 +1,89 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { SearchNormal1 } from 'iconsax-react';
+import Fuse from 'fuse.js';
 import PageTemplate from '../components/PageTemplate';
 import ArticleCard from '../components/ArticleCard';
 import { ARTICLES, AUTHORS, RECOMMENDED_TOPICS } from '../data/mockData';
+import type { Article } from '../data/mockData';
+import { api } from '../lib/api';
 
-interface SearchPageProps {
-  isLoggedIn: boolean;
-  onAuthChange: (v: boolean) => void;
+// Map a backend article record to the frontend Article shape.
+function normalizeArticle(a: any): Article {
+  return {
+    id: a.id,
+    title: a.title ?? '',
+    subtitle: a.subtitle ?? '',
+    body: a.body ?? '',
+    author: {
+      id: a.author?.id ?? '',
+      name: a.author?.name ?? 'Unknown',
+      username: a.author?.username ?? '',
+      avatar: a.author?.avatar ?? '',
+      bio: a.author?.bio ?? '',
+      followers: a.author?.followersCount ?? 0,
+      following: a.author?.followingCount ?? 0,
+    },
+    publishedAt: a.published_at
+      ? new Date(a.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      : '',
+    readTime: a.read_time ?? 1,
+    tags: a.tags ?? [],
+    thumbnail: a.thumbnail ?? '',
+    claps: a.claps ?? 0,
+    comments: a.comments_count ?? 0,
+    isMemberOnly: a.is_member_only ?? false,
+  };
 }
 
-export default function SearchPage({ isLoggedIn, onAuthChange }: SearchPageProps) {
+export default function SearchPage() {
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState(params.get('q') || '');
+  const [liveArticles, setLiveArticles] = useState<Article[]>([]);
 
-  const q = query.toLowerCase().trim();
+  // Fetch live articles once; fall back silently to mock-only on failure.
+  useEffect(() => {
+    api.get('/articles')
+      .then(res => {
+        const list = res.data?.articles ?? res.data ?? [];
+        setLiveArticles(list.map(normalizeArticle));
+      })
+      .catch(() => setLiveArticles([]));
+  }, []);
 
-  const matchedArticles = q
-    ? ARTICLES.filter(a =>
-        a.title.toLowerCase().includes(q) ||
-        a.subtitle.toLowerCase().includes(q) ||
-        a.tags.some(t => t.toLowerCase().includes(q)) ||
-        a.author.name.toLowerCase().includes(q)
-      )
-    : [];
+  // Merge live + mock articles, deduped by id (live wins).
+  const allArticles = useMemo(() => {
+    const byId = new Map<string, Article>();
+    for (const a of ARTICLES) byId.set(a.id, a);
+    for (const a of liveArticles) byId.set(a.id, a);
+    return [...byId.values()];
+  }, [liveArticles]);
 
-  const matchedAuthors = q
-    ? AUTHORS.filter(a =>
-        a.name.toLowerCase().includes(q) ||
-        a.bio.toLowerCase().includes(q)
-      )
-    : [];
+  const articleFuse = useMemo(
+    () => new Fuse(allArticles, {
+      keys: ['title', 'subtitle', 'tags', 'author.name'],
+      threshold: 0.4,
+      ignoreLocation: true,
+    }),
+    [allArticles]
+  );
+
+  const authorFuse = useMemo(
+    () => new Fuse(AUTHORS, {
+      keys: ['name', 'bio', 'username'],
+      threshold: 0.4,
+      ignoreLocation: true,
+    }),
+    []
+  );
+
+  const q = query.trim();
+
+  const matchedArticles = q ? articleFuse.search(q).map(r => r.item) : [];
+  const matchedAuthors = q ? authorFuse.search(q).map(r => r.item) : [];
 
   return (
-    <PageTemplate isLoggedIn={isLoggedIn} onAuthChange={onAuthChange}>
+    <PageTemplate>
       <div className="container" style={{ paddingTop: 32, paddingBottom: 48 }}>
         {/* Search input */}
         <div style={{

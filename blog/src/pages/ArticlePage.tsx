@@ -8,12 +8,7 @@ import ArticleCard from '../components/ArticleCard';
 import { ARTICLES, formatClaps } from '../data/mockData';
 import { getUserArticles } from '../data/articleStore';
 
-interface ArticlePageProps {
-  isLoggedIn: boolean;
-  onAuthChange: (v: boolean) => void;
-}
-
-export default function ArticlePage({ isLoggedIn, onAuthChange }: ArticlePageProps) {
+export default function ArticlePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   // Look up in mock articles first, then user-created articles
@@ -47,7 +42,7 @@ export default function ArticlePage({ isLoggedIn, onAuthChange }: ArticlePagePro
 
   if (!article) {
     return (
-      <PageTemplate isLoggedIn={isLoggedIn} onAuthChange={onAuthChange}>
+      <PageTemplate>
         <div style={{ textAlign: 'center', padding: '80px 24px' }}>
           <h1 style={{ fontSize: 32, marginBottom: 16 }}>Article not found</h1>
           <button
@@ -85,7 +80,7 @@ export default function ArticlePage({ isLoggedIn, onAuthChange }: ArticlePagePro
   ).slice(0, 3);
 
   return (
-    <PageTemplate isLoggedIn={isLoggedIn} onAuthChange={onAuthChange}>
+    <PageTemplate>
       {/* Reading progress bar */}
       <div className="reading-progress" style={{ width: `${scrollProgress}%` }} />
 

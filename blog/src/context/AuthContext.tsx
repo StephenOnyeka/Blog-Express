@@ -22,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (token) {
       api.get('/auth/me')
         .then(res => {
-          setUser(res.data);
+          setUser(res.data.user);
         })
         .catch(() => {
           logout();
@@ -37,17 +37,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (data: any) => {
     const res = await api.post('/auth/login', data);
-    const { access_token, user } = res.data;
-    localStorage.setItem('token', access_token);
-    setToken(access_token);
+    const { token, user } = res.data;
+    localStorage.setItem('token', token);
+    setToken(token);
     setUser(user);
   };
 
   const register = async (data: any) => {
     const res = await api.post('/auth/register', data);
-    const { access_token, user } = res.data;
-    localStorage.setItem('token', access_token);
-    setToken(access_token);
+    const { token, user } = res.data;
+    localStorage.setItem('token', token);
+    setToken(token);
     setUser(user);
   };
 

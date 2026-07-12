@@ -6,12 +6,7 @@ import ArticleCard from '../components/ArticleCard';
 import { AUTHORS, ARTICLES } from '../data/mockData';
 import { getUserArticles, CURRENT_USER as ME } from '../data/articleStore';
 
-interface ProfilePageProps {
-  isLoggedIn: boolean;
-  onAuthChange: (v: boolean) => void;
-}
-
-export default function ProfilePage({ isLoggedIn, onAuthChange }: ProfilePageProps) {
+export default function ProfilePage() {
   const { username } = useParams<{ username: string }>();
   const [activeTab, setActiveTab] = useState<'home' | 'lists' | 'about'>('home');
   const [following, setFollowing] = useState(false);
@@ -31,7 +26,7 @@ export default function ProfilePage({ isLoggedIn, onAuthChange }: ProfilePagePro
 
   if (!author) {
     return (
-      <PageTemplate isLoggedIn={isLoggedIn} onAuthChange={onAuthChange}>
+      <PageTemplate>
         <div style={{ textAlign: 'center', padding: '80px 24px' }}>
           <h1 style={{ fontSize: 32, marginBottom: 16 }}>User not found</h1>
           <Link to="/" style={{ color: 'var(--accent)' }}>← Back to home</Link>
@@ -46,7 +41,7 @@ export default function ProfilePage({ isLoggedIn, onAuthChange }: ProfilePagePro
     : ARTICLES.filter(a => a.author.username === username);
 
   return (
-    <PageTemplate isLoggedIn={isLoggedIn} onAuthChange={onAuthChange}>
+    <PageTemplate>
       {/* Profile header */}
       <div className="profile-header">
         <div className="profile-header-inner">

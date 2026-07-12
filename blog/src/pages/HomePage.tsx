@@ -6,12 +6,7 @@ import Sidebar from '../components/Sidebar';
 import { ARTICLES, TOPICS } from '../data/mockData';
 import { getUserArticles } from '../data/articleStore';
 
-interface HomePageProps {
-  isLoggedIn: boolean;
-  onAuthChange: (v: boolean) => void;
-}
-
-export default function HomePage({ isLoggedIn, onAuthChange }: HomePageProps) {
+export default function HomePage() {
   const [activeTopic, setActiveTopic] = useState('For You');
 
   // Merge user-written articles (newest first) with mock articles
@@ -22,7 +17,7 @@ export default function HomePage({ isLoggedIn, onAuthChange }: HomePageProps) {
     : allArticles.filter(a => a.tags.some(t => t.toLowerCase() === activeTopic.toLowerCase()));
 
   return (
-    <PageTemplate isLoggedIn={isLoggedIn} onAuthChange={onAuthChange}>
+    <PageTemplate>
       {/* Topic bar */}
       <div className="topic-bar">
         <div className="topic-bar-inner">

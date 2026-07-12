@@ -11,6 +11,7 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default('7d'),
   RESEND_API: z.string(),
   FROM_EMAIL: z.string().email().default('onboarding@resend.dev'),
+  FRONTEND_URL: z.string().url().default('http://localhost:5173'),
 });
 
 const _env = envSchema.safeParse(process.env);

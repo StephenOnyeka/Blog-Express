@@ -1,17 +1,27 @@
 const prisma = require('../config/database');
+const NotificationService = require('./notification.service');
 
 class ArticleService {
   static async createArticle(authorId, data) {
     const readTime = Math.ceil((data.body || '').split(' ').length / 200); // 200 words per min
 
-    return prisma.article.create({
+    const article = await prisma.article.create({
       data: {
         ...data,
         author_id: authorId,
         read_time: readTime || 1,
         published_at: data.is_draft ? null : new Date(),
       },
+      include: {
+        author: { select: { id: true, name: true, username: true, avatar: true } },
+      },
     });
+
+    if (!article.is_draft) {
+      await NotificationService.createForFollowers(article);
+    }
+
+    return article;
   }
 
   static async getArticles(query) {
@@ -59,17 +69,27 @@ class ArticleService {
     if (!article) throw new Error('Article not found');
     if (article.author_id !== authorId) throw new Error('Forbidden');
 
-    if (data.is_draft === false && article.is_draft === true) {
+    const isPublishing = data.is_draft === false && article.is_draft === true;
+    if (isPublishing) {
       data.published_at = new Date();
     }
     if (data.body) {
       data.read_time = Math.ceil(data.body.split(' ').length / 200) || 1;
     }
 
-    return prisma.article.update({
+    const updated = await prisma.article.update({
       where: { id },
       data,
+      include: {
+        author: { select: { id: true, name: true, username: true, avatar: true } },
+      },
     });
+
+    if (isPublishing) {
+      await NotificationService.createForFollowers(updated);
+    }
+
+    return updated;
   }
 
   static async deleteArticle(id, authorId) {

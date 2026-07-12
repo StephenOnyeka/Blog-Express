@@ -1,26 +1,37 @@
 const cron = require('node-cron');
-const prisma = require('../config/database');
+const CronService = require('../services/cron.service');
 
 const startJobs = () => {
-  // Example cleanup job running every day at midnight
+  // Weekly topic digest — every Monday at 08:00
+  cron.schedule('0 8 * * 1', async () => {
+    try {
+      console.log('Running weekly digest job...');
+      const result = await CronService.sendWeeklyDigest();
+      console.log(`Weekly digest complete. Sent ${result.sent} emails for ${result.articles} articles.`);
+    } catch (error) {
+      console.error('Error running weekly digest job:', error);
+    }
+  });
+
+  // Follower-count sync — hourly
+  cron.schedule('0 * * * *', async () => {
+    try {
+      console.log('Running follower-count sync job...');
+      await CronService.syncFollowerCounts();
+      console.log('Follower-count sync complete.');
+    } catch (error) {
+      console.error('Error running follower-count sync job:', error);
+    }
+  });
+
+  // Stale-draft cleanup — daily at midnight
   cron.schedule('0 0 * * *', async () => {
     try {
-      console.log('Running cleanup job...');
-      
-      // E.g., delete unverified email subscriptions older than 30 days
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-      const result = await prisma.emailSubscription.deleteMany({
-        where: {
-          is_verified: false,
-          created_at: { lt: thirtyDaysAgo },
-        },
-      });
-
-      console.log(`Cleanup job completed. Deleted ${result.count} unverified subscriptions.`);
+      console.log('Running stale-draft cleanup job...');
+      const result = await CronService.cleanupStaleDrafts();
+      console.log(`Stale-draft cleanup complete. Deleted ${result.deleted} drafts.`);
     } catch (error) {
-      console.error('Error running cleanup job:', error);
+      console.error('Error running stale-draft cleanup job:', error);
     }
   });
 
