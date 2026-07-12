@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(uuid())
+  name            String   @db.VarChar(120)
+  username        String   @unique @db.VarChar(50)
+  email           String   @unique @db.VarChar(255)
+  password_hash   String
+  avatar          String?  @db.Text
+  bio             String?  @db.Text
+  followersCount  Int      @default(0)
+  followingCount  Int      @default(0)
+  created_at      DateTime @default(now())
+
+  articles             Article[]
+  followers            AuthorFollow[]      @relation("AuthorFollowsFollower")
+  following            AuthorFollow[]      @relation("AuthorFollowsAuthor")
+  notifications        Notification[]
+  email_subscriptions  EmailSubscription[]
+
+  @@map("users")
+}
+
+model Article {
+  id             String   @id @default(uuid())
+  title          String   @db.VarChar(300)
+  subtitle       String?  @db.VarChar(500)
+  body           String   @db.Text
+  thumbnail      String?  @db.Text
+  tags           String[] @default([])
+  is_member_only Boolean  @default(false)
+  read_time      Int      @default(1)
+  claps          Int      @default(0)
+  comments_count Int      @default(0)
+  is_draft       Boolean  @default(true)
+  published_at   DateTime?
+  author_id      String
+  created_at     DateTime @default(now())
+
+  author         User           @relation(fields: [author_id], references: [id])
+  notifications  Notification[]
+
+  @@map("articles")
+}
+
+model AuthorFollow {
+  id          String   @id @default(uuid())
+  follower_id String
+  author_id   String
+  created_at  DateTime @default(now())
+
+  follower    User     @relation("AuthorFollowsFollower", fields: [follower_id], references: [id])
+  author      User     @relation("AuthorFollowsAuthor", fields: [author_id], references: [id])
+
+  @@map("author_follows")
+}
+
+model Notification {
+  id           String   @id @default(uuid())
+  recipient_id String
+  type         String   @db.VarChar
+  message      String   @db.Text
+  article_id   String?
+  is_read      Boolean  @default(false)
+  created_at   DateTime @default(now())
+
+  recipient    User     @relation(fields: [recipient_id], references: [id])
+  article      Article? @relation(fields: [article_id], references: [id])
+
+  @@map("notifications")
+}
+
+model EmailSubscription {
+  id                   String   @id @default(uuid())
+  email                String   @db.VarChar(255)
+  user_id              String?
+  topics               String[] @default([])
+  subscribe_newsletter Boolean  @default(true)
+  is_verified          Boolean  @default(false)
+  verify_token         String?
+  unsubscribe_token    String?
+  created_at           DateTime @default(now())
+
+  user                 User?    @relation(fields: [user_id], references: [id])
+
+  @@map("email_subscriptions")
+}
