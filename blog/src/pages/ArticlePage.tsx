@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import parse from 'html-react-parser';
+import DOMPurify from 'dompurify';
 import {
   Heart, HeartAdd, Message, Save2, Share, More, ArrowLeft, Link1,
 } from 'iconsax-react';
@@ -56,19 +58,20 @@ export default function ArticlePage() {
     );
   }
 
-  // Render Quill HTML directly (it's already valid HTML)
+  // Sanitize and parse HTML
   const renderBody = (html: string) => {
     // If the body contains HTML tags (from Quill), render as-is.
     // Otherwise fall back to simple paragraph splitting for mock data.
     const isQuillHtml = /<[a-z][\s\S]*>/i.test(html);
-    if (isQuillHtml) {
-      return { __html: html };
+    let rawHtml = html;
+    if (!isQuillHtml) {
+      rawHtml = html
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/^/, '<p>')
+        .replace(/$/, '</p>');
     }
-    return { __html: html
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/^/, '<p>')
-      .replace(/$/, '</p>')
-    };
+    const cleanHtml = DOMPurify.sanitize(rawHtml);
+    return parse(cleanHtml);
   };
 
   const moreArticles = ARTICLES.filter(
@@ -203,10 +206,9 @@ export default function ArticlePage() {
         </div>
 
         {/* Body */}
-        <div
-          className="article-body"
-          dangerouslySetInnerHTML={renderBody(article.body)}
-        />
+        <div className="article-body">
+          {renderBody(article.body)}
+        </div>
 
         {/* Clap zone */}
         <div className="article-clap-zone">
