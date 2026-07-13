@@ -38,7 +38,7 @@ export default function Navbar({ onSignIn }: NavbarProps) {
 
         {/* Search */}
         <div className="flex-1 max-w-[280px] flex items-center gap-2 bg-neutral-50 rounded-full px-4 py-2 text-neutral-500 text-sm transition-colors hover:bg-neutral-100">
-          <SearchNormal1 size={16} color="currentColor" />
+          <SearchNormal1 size={16} variant="Linear" color="currentColor" />
           <input
             className="border-none bg-transparent outline-none text-sm text-neutral-900 w-full font-sans placeholder-neutral-500"
             type="text"
@@ -54,7 +54,7 @@ export default function Navbar({ onSignIn }: NavbarProps) {
           {isLoggedIn ? (
             <>
               <Link to="/write" className="flex items-center gap-1.5 text-neutral-500 text-[15px] font-normal transition-colors py-2 hover:text-neutral-900">
-                <Edit size={18} color="currentColor" />
+                <Edit size={18} variant="Linear" color="currentColor" />
                 <span>Write</span>
               </Link>
               <button
@@ -65,7 +65,7 @@ export default function Navbar({ onSignIn }: NavbarProps) {
                    setUnreadCount(0);
                 }}
               >
-                <Notification size={20} className="text-neutral-500" />
+                <Notification size={20} className="text-neutral-500"  variant="Linear" color="currentColor" />
                 {unreadCount > 0 && <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>}
               </button>
               <Link to={`/profile/${user?.username}`} className="w-9 h-9 rounded-full overflow-hidden cursor-pointer bg-neutral-100 flex items-center justify-center shrink-0" aria-label="Profile">
@@ -79,7 +79,7 @@ export default function Navbar({ onSignIn }: NavbarProps) {
           ) : (
             <>
               <Link to="/write" className="flex items-center gap-1.5 text-neutral-500 text-[15px] font-normal transition-colors py-2 hover:text-neutral-900">
-                <Edit size={18} color="currentColor" />
+                <Edit size={18} variant="Linear" color="currentColor" />
                 <span>Write</span>
               </Link>
               <button className="text-sm text-neutral-500 font-normal py-2 transition-colors hover:text-neutral-900" onClick={onSignIn}>Sign in</button>
@@ -131,7 +131,7 @@ export function AuthModal({ isOpen, onClose, mode, onToggleMode, onSuccess }: Au
     <div className="fixed inset-0 bg-white/95 z-[999] flex items-center justify-center p-6" onClick={onClose}>
       <div className="w-full max-w-[400px] bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-10 relative flex flex-col items-center" onClick={e => e.stopPropagation()}>
         <button className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-900 transition-colors" onClick={onClose} aria-label="Close">
-          <CloseCircle size={22} />
+          <CloseCircle size={22}  variant="Linear" color="currentColor" />
         </button>
         <h2 className="font-serif text-[28px] text-neutral-900 mb-8 mt-2">
           {mode === 'signin' ? 'Welcome back.' : 'Join BlogNest.'}

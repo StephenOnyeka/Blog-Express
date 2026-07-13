@@ -26,7 +26,7 @@ export default function HomePage() {
             aria-label="Add topics"
             title="Add topics"
           >
-            <Add size={18} />
+            <Add size={18}  variant="Linear" color="currentColor" />
           </button>
           {TOPICS.map(topic => (
             <button

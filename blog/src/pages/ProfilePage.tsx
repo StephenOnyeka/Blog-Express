@@ -52,7 +52,7 @@ export default function ProfilePage() {
                 <span><strong className="text-neutral-900">{author.followers.toLocaleString()}</strong> followers</span>
                 <span><strong className="text-neutral-900">{author.following}</strong> following</span>
                 <span className="flex items-center gap-1">
-                  <People size={14} /> {authorArticles.length} stories
+                  <People size={14}  variant="Linear" color="currentColor" /> {authorArticles.length} stories
                 </span>
               </div>
             </div>
@@ -74,10 +74,10 @@ export default function ProfilePage() {
               ) : (
                 <div className="flex gap-2">
                   <button className="flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 transition-colors p-2" aria-label="Edit profile">
-                    <Edit size={18} />
+                    <Edit size={18}  variant="Linear" color="currentColor" />
                   </button>
                   <button className="flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 transition-colors p-2" aria-label="Share profile">
-                    <Link1 size={18} />
+                    <Link1 size={18}  variant="Linear" color="currentColor" />
                   </button>
                 </div>
               )}

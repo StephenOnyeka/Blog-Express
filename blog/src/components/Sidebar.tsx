@@ -32,7 +32,7 @@ export default function Sidebar() {
       {/* Trending */}
       <section className="mb-6">
         <div className="flex items-center gap-1.5 text-sm font-semibold text-neutral-900 mb-4">
-          <TrendUp size={16} />
+          <TrendUp size={16}  variant="Linear" color="currentColor" />
           Trending on BlogNest
         </div>
         {TRENDING.slice(0, 5).map((article, i) => (
@@ -45,7 +45,7 @@ export default function Sidebar() {
       {/* Who to Follow */}
       <section className="mb-6">
         <div className="flex items-center gap-1.5 text-sm font-semibold text-neutral-900 mb-4">
-          <People size={16} />
+          <People size={16}  variant="Linear" color="currentColor" />
           Who to Follow
         </div>
         {WHO_TO_FOLLOW.map(author => (
@@ -74,7 +74,7 @@ export default function Sidebar() {
           </div>
         ))}
         <Link to="/" className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors flex items-center gap-1 mt-1">
-          See more suggestions <ArrowRight2 size={14} />
+          See more suggestions <ArrowRight2 size={14}  variant="Linear" color="currentColor" />
         </Link>
       </section>
 
@@ -83,7 +83,7 @@ export default function Sidebar() {
       {/* Recommended Topics */}
       <section className="mb-6">
         <div className="flex items-center gap-1.5 text-sm font-semibold text-neutral-900 mb-4">
-          <Tag2 size={16} />
+          <Tag2 size={16}  variant="Linear" color="currentColor" />
           Recommended Topics
         </div>
         <div className="flex flex-wrap gap-2">
@@ -92,7 +92,7 @@ export default function Sidebar() {
           ))}
         </div>
         <Link to="/" className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors flex items-center gap-1 mt-3">
-          See more topics <ArrowRight2 size={14} />
+          See more topics <ArrowRight2 size={14}  variant="Linear" color="currentColor" />
         </Link>
       </section>
 
@@ -125,8 +125,8 @@ function StaffPickCard({ article }: { article: Article }) {
 
 function TrendingCard({ article, index }: { article: Article; index: number }) {
   return (
-    <Link to={`/article/${article.id}`} className="flex items-start gap-3 mb-5 no-underline group">
-      <span className="text-3xl font-bold text-neutral-200 leading-none w-6 shrink-0">0{index}</span>
+    <Link to={`/article/${article.id}`} className="flex items-start gap-6 mb-5 no-underline group">
+      <div className="text-3xl font-bold text-neutral-200 leading-none w-6 shrink-0">0{index}</div>
       <div className="min-w-0">
         <div className="flex items-center gap-1.5 mb-1">
           <div className="w-5 h-5 rounded-full overflow-hidden bg-neutral-100 shrink-0">

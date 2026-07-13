@@ -85,7 +85,7 @@ export default function SearchPage() {
       <div className="max-w-[1192px] mx-auto px-6 pt-8 pb-12">
         {/* Search input */}
         <div className="flex items-center gap-3 bg-neutral-50 rounded-full px-5 py-3 mb-8 max-w-[600px]">
-          <SearchNormal1 size={20} className="text-neutral-400 shrink-0" />
+          <SearchNormal1 size={20} className="text-neutral-400 shrink-0"  variant="Linear" color="currentColor" />
           <input
             autoFocus
             type="text"

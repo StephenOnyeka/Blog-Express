@@ -219,14 +219,14 @@ export default function WritePage() {
           onClick={() => navigate(-1)}
           className="flex items-center gap-1.5 text-neutral-500 bg-transparent border-none cursor-pointer text-sm font-sans p-0 shrink-0 hover:text-neutral-900 transition-colors"
         >
-          <ArrowLeft size={16} />
+          <ArrowLeft size={16}  variant="Linear" color="currentColor" />
           <span className="flex items-center gap-1">
             {saveStatus === "saving" && (
               <span className="text-neutral-400">Saving…</span>
             )}
             {saveStatus === "saved" && (
               <span className="text-green-700 flex items-center gap-[3px]">
-                <TickCircle size={14} /> Saved
+                <TickCircle size={14}  variant="Linear" color="currentColor" /> Saved
               </span>
             )}
             {saveStatus === "draft" && (
@@ -247,7 +247,7 @@ export default function WritePage() {
             onClick={() => setShowPublishPanel(true)}
             className="bg-transparent border-none cursor-pointer flex items-center text-neutral-500 p-1 hover:text-neutral-900 transition-colors"
           >
-            <Setting2 size={20} />
+            <Setting2 size={20}  variant="Linear" color="currentColor" />
           </button>
           <button
             className="bg-neutral-900 text-white rounded-full px-5 py-2 text-sm font-medium transition-opacity hover:opacity-85 disabled:opacity-40"
@@ -347,7 +347,7 @@ export default function WritePage() {
                 className="bg-transparent border-none cursor-pointer flex items-center text-neutral-500 hover:text-neutral-900 transition-colors"
                 aria-label="Close"
               >
-                <CloseCircle size={22} />
+                <CloseCircle size={22}  variant="Linear" color="currentColor" />
               </button>
             </div>
 
@@ -366,7 +366,7 @@ export default function WritePage() {
                       onClick={() => thumbnailInputRef.current?.click()}
                       className="w-full h-[160px] bg-neutral-100 border-none cursor-pointer flex flex-col items-center justify-center gap-2 text-neutral-400 font-sans hover:bg-neutral-200 transition-colors"
                     >
-                      <ImageIcon size={28} />
+                      <ImageIcon size={28}  variant="Linear" color="currentColor" />
                       <span className="text-[13px]">Add cover image</span>
                     </button>
                   )}
@@ -422,7 +422,7 @@ export default function WritePage() {
                     disabled={!tagInput.trim() || tags.length >= 5}
                     className="bg-neutral-900 text-white border-none rounded-full px-3.5 py-2 cursor-pointer flex items-center disabled:opacity-40 transition-opacity hover:opacity-85"
                   >
-                    <Add size={18} />
+                    <Add size={18}  variant="Linear" color="currentColor" />
                   </button>
                 </div>
 

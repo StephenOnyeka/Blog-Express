@@ -69,12 +69,12 @@ export default function ArticleCard({ article, showThumbnail = true }: ArticleCa
             >
               {liked
                 ? <Heart size={16} variant="Bold" color="currentColor" />
-                : <HeartAdd size={16} />
+                : <HeartAdd size={16}  variant="Linear" color="currentColor" />
               }
               <span>{formatClaps(claps)}</span>
             </button>
             <button className="flex items-center gap-1.5 text-neutral-400 text-[13px] font-medium transition-colors hover:text-neutral-900" aria-label="Comments">
-              <Message size={16} />
+              <Message size={16}  variant="Linear" color="currentColor" />
               <span>{article.comments}</span>
             </button>
             <button
@@ -85,7 +85,7 @@ export default function ArticleCard({ article, showThumbnail = true }: ArticleCa
               <Save2 size={16} variant={saved ? 'Bold' : 'Linear'} color="currentColor" />
             </button>
             <button className="flex items-center gap-1.5 text-neutral-400 text-[13px] font-medium transition-colors hover:text-neutral-900" aria-label="More">
-              <More size={16} />
+              <More size={16}  variant="Linear" color="currentColor" />
             </button>
           </div>
         </div>

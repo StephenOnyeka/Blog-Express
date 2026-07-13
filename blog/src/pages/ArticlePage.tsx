@@ -95,7 +95,7 @@ export default function ArticlePage() {
           onClick={() => navigate(-1)}
           className="flex items-center gap-1.5 text-neutral-500 text-sm mb-4 py-4 hover:text-neutral-900 transition-colors"
         >
-          <ArrowLeft size={16} />
+          <ArrowLeft size={16} variant='Linear' color='currentColor'/>
           Back
         </button>
 
@@ -158,12 +158,12 @@ export default function ArticlePage() {
               >
                 {clapped
                   ? <Heart size={20} variant="Bold" color="currentColor" />
-                  : <HeartAdd size={20} />
+                  : <HeartAdd size={20} variant="Linear" color="currentColor" />
                 }
                 <span>{formatClaps(claps)}</span>
               </button>
               <button className={toolbarBtn} aria-label="Comments">
-                <Message size={20} />
+                <Message size={20}  variant="Linear" color="currentColor" />
                 <span>{article.comments}</span>
               </button>
               <button
@@ -178,10 +178,10 @@ export default function ArticlePage() {
                 onClick={() => { navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }}
                 aria-label="Share"
               >
-                <Share size={20} />
+                <Share size={20}  variant="Linear" color="currentColor" />
               </button>
               <button className={toolbarBtn} aria-label="More">
-                <More size={20} />
+                <More size={20}  variant="Linear" color="currentColor" />
               </button>
             </div>
           </div>
@@ -210,12 +210,12 @@ export default function ArticlePage() {
           >
             {clapped
               ? <Heart size={28} variant="Bold" color="currentColor" />
-              : <HeartAdd size={28} />
+              : <HeartAdd size={28}  variant="Linear" color="currentColor" />
             }
             <span className="text-base font-medium">{formatClaps(claps)}</span>
           </button>
           <button className="flex items-center gap-2 text-neutral-500 text-sm hover:text-neutral-900 transition-colors" aria-label="Comments">
-            <Message size={24} />
+            <Message size={24}  variant="Linear" color="currentColor" />
             <span>{article.comments} responses</span>
           </button>
 
@@ -225,7 +225,7 @@ export default function ArticlePage() {
               onClick={() => { navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }}
               aria-label="Copy link"
             >
-              <Link1 size={20} />
+              <Link1 size={20}  variant="Linear" color="currentColor" />
             </button>
             <button
               className={`flex items-center gap-1.5 transition-colors ${saved ? 'text-green-700' : 'text-neutral-400 hover:text-neutral-900'}`}
