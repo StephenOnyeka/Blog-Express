@@ -19,20 +19,23 @@ export default function HomePage() {
   return (
     <PageTemplate>
       {/* Topic bar */}
-      <div className="topic-bar">
-        <div className="topic-bar-inner">
+      <div className="border-b border-neutral-200 py-3 bg-white overflow-x-auto scrollbar-none">
+        <div className="flex items-center gap-1 max-w-[1192px] mx-auto px-6 whitespace-nowrap">
           <button
-            className="topic-pill"
+            className="px-2 py-1.5 rounded-full text-sm text-neutral-500 transition-all hover:bg-neutral-100 hover:text-neutral-900 shrink-0 cursor-pointer"
             aria-label="Add topics"
             title="Add topics"
-            style={{ padding: '6px 8px' }}
           >
             <Add size={18} />
           </button>
           {TOPICS.map(topic => (
             <button
               key={topic}
-              className={`topic-pill ${activeTopic === topic ? 'active' : ''}`}
+              className={`px-4 py-1.5 rounded-full text-sm font-normal shrink-0 transition-all cursor-pointer ${
+                activeTopic === topic
+                  ? 'bg-neutral-900 text-white'
+                  : 'text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900'
+              }`}
               onClick={() => setActiveTopic(topic)}
             >
               {topic}
@@ -42,14 +45,14 @@ export default function HomePage() {
       </div>
 
       {/* Main grid */}
-      <div className="home-layout">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-10 max-w-[1192px] mx-auto px-6 py-8">
         {/* Feed */}
-        <div className="article-feed">
+        <div className="flex flex-col">
           {filteredArticles.length === 0 ? (
-            <div style={{ padding: '48px 0', color: 'var(--text-secondary)', textAlign: 'center' }}>
-              <p style={{ fontSize: 16 }}>No articles found in "{activeTopic}"</p>
+            <div className="py-12 text-center text-neutral-500">
+              <p className="text-base">No articles found in "{activeTopic}"</p>
               <button
-                style={{ marginTop: 12, color: 'var(--accent)', fontSize: 14, cursor: 'pointer', background: 'none', border: 'none' }}
+                className="mt-3 text-green-700 text-sm cursor-pointer hover:underline"
                 onClick={() => setActiveTopic('For You')}
               >
                 Back to For You

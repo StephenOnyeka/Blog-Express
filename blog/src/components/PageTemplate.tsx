@@ -25,7 +25,7 @@ export default function PageTemplate({
     <>
       <Navbar onSignIn={openSignIn} />
 
-      <main style={{ flex: 1 }}>
+      <main className="flex-1">
         {children}
       </main>
 

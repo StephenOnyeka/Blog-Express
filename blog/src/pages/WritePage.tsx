@@ -179,62 +179,27 @@ export default function WritePage() {
   const canPublish =
     title.trim().length > 0 && body.replace(/<[^>]+>/g, "").trim().length > 0;
 
-
   /* ── Published success screen ──────────────────── */
   if (published) {
     return (
       <PageTemplate showFooter={false}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            minHeight: "70vh",
-            gap: 16,
-            textAlign: "center",
-            padding: "0 24px",
-          }}
-        >
-          <div style={{ fontSize: 56 }}>🎉</div>
-          <h1
-            style={{
-              fontSize: 28,
-              fontWeight: 800,
-              color: "var(--text-primary)",
-              letterSpacing: -0.5,
-            }}
-          >
+        <div className="flex flex-col items-center justify-center min-h-[70vh] gap-4 text-center px-6">
+          <div className="text-6xl">🎉</div>
+          <h1 className="text-[28px] font-extrabold text-neutral-900 tracking-[-0.5px]">
             Your story is live!
           </h1>
-          <p
-            style={{
-              fontSize: 16,
-              color: "var(--text-secondary)",
-              maxWidth: 400,
-            }}
-          >
+          <p className="text-base text-neutral-500 max-w-[400px]">
             "{title}" has been published to BlogNest. Share it with the world!
           </p>
-          <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+          <div className="flex gap-3 mt-2">
             <button
-              className="btn-publish-now"
+              className="bg-green-700 text-white rounded-full px-6 py-2.5 text-[15px] font-semibold transition-colors font-sans hover:bg-green-800"
               onClick={() => navigate(`/article/${draft.id}`)}
             >
               View story
             </button>
             <button
-              style={{
-                border: "1px solid var(--border)",
-                borderRadius: 100,
-                padding: "10px 24px",
-                fontSize: 15,
-                fontWeight: 500,
-                color: "var(--text-primary)",
-                background: "none",
-                cursor: "pointer",
-                fontFamily: "var(--font-sans)",
-              }}
+              className="border border-neutral-200 rounded-full px-6 py-2.5 text-[15px] font-medium text-neutral-900 bg-transparent transition-colors hover:bg-neutral-50"
               onClick={() => navigate("/profile/me")}
             >
               Go to profile
@@ -249,63 +214,30 @@ export default function WritePage() {
   return (
     <PageTemplate showFooter={false}>
       {/* Top bar */}
-      <div
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 100,
-          background: "var(--bg-primary)",
-          borderBottom: "1px solid var(--border-light)",
-          padding: "0 24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          height: 57,
-          gap: 16,
-        }}
-      >
+      <div className="sticky top-0 z-[100] bg-white border-b border-neutral-100 px-6 flex items-center justify-between h-[57px] gap-4">
         <button
           onClick={() => navigate(-1)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            color: "var(--text-secondary)",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontSize: 14,
-            fontFamily: "var(--font-sans)",
-            padding: 0,
-            flexShrink: 0,
-          }}
+          className="flex items-center gap-1.5 text-neutral-500 bg-transparent border-none cursor-pointer text-sm font-sans p-0 shrink-0 hover:text-neutral-900 transition-colors"
         >
           <ArrowLeft size={16} />
-          <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <span className="flex items-center gap-1">
             {saveStatus === "saving" && (
-              <span style={{ color: "var(--text-muted)" }}>Saving…</span>
+              <span className="text-neutral-400">Saving…</span>
             )}
             {saveStatus === "saved" && (
-              <span
-                style={{
-                  color: "var(--accent)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 3,
-                }}
-              >
+              <span className="text-green-700 flex items-center gap-[3px]">
                 <TickCircle size={14} /> Saved
               </span>
             )}
             {saveStatus === "draft" && (
-              <span style={{ color: "var(--text-muted)" }}>Draft</span>
+              <span className="text-neutral-400">Draft</span>
             )}
           </span>
         </button>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div className="flex items-center gap-3">
           {words > 0 && (
-            <span style={{ fontSize: 12, color: "var(--text-muted)" }}>
+            <span className="text-xs text-neutral-400">
               {words.toLocaleString()} words · {readMins} min read
             </span>
           )}
@@ -313,24 +245,12 @@ export default function WritePage() {
             title="Story settings"
             aria-label="Settings"
             onClick={() => setShowPublishPanel(true)}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              color: "var(--text-secondary)",
-              padding: 4,
-            }}
+            className="bg-transparent border-none cursor-pointer flex items-center text-neutral-500 p-1 hover:text-neutral-900 transition-colors"
           >
             <Setting2 size={20} />
           </button>
           <button
-            className="btn-getstarted"
-            style={{
-              opacity: canPublish ? 1 : 0.4,
-              transition: "opacity 0.2s",
-            }}
+            className="bg-neutral-900 text-white rounded-full px-5 py-2 text-sm font-medium transition-opacity hover:opacity-85 disabled:opacity-40"
             onClick={() => canPublish && setShowPublishPanel(true)}
             disabled={!canPublish}
           >
@@ -340,12 +260,10 @@ export default function WritePage() {
       </div>
 
       {/* Editor area */}
-      <div
-        style={{ maxWidth: 740, margin: "0 auto", padding: "48px 24px 80px" }}
-      >
+      <div className="max-w-[740px] mx-auto px-6 pt-12 pb-20">
         {/* Title */}
         <textarea
-          className="write-title-input"
+          className="w-full border-none outline-none font-serif text-[42px] font-light text-neutral-900 placeholder:text-neutral-300 leading-tight mb-2 resize-none bg-transparent"
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -355,12 +273,11 @@ export default function WritePage() {
             el.style.height = el.scrollHeight + "px";
           }}
           rows={1}
-          style={{ marginBottom: 8 }}
         />
 
         {/* Subtitle */}
         <textarea
-          className="write-subtitle-input"
+          className="w-full border-none outline-none font-sans text-[22px] text-neutral-500 leading-relaxed mb-6 resize-none bg-transparent placeholder:text-neutral-300"
           placeholder="Add a subtitle (optional)"
           value={subtitle}
           onChange={(e) => setSubtitle(e.target.value)}
@@ -370,42 +287,20 @@ export default function WritePage() {
             el.style.height = el.scrollHeight + "px";
           }}
           rows={1}
-          style={{ marginBottom: 24 }}
         />
 
         {/* Author strip */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            marginBottom: 32,
-            paddingBottom: 20,
-            borderBottom: "1px solid var(--border-light)",
-          }}
-        >
+        <div className="flex items-center gap-2.5 mb-8 pb-5 border-b border-neutral-100">
           <img
             src={CURRENT_USER.avatar}
             alt={CURRENT_USER.name}
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: "50%",
-              objectFit: "cover",
-              background: "var(--bg-tertiary)",
-            }}
+            className="w-9 h-9 rounded-full object-cover bg-neutral-100"
           />
           <div>
-            <div
-              style={{
-                fontSize: 14,
-                fontWeight: 600,
-                color: "var(--text-primary)",
-              }}
-            >
+            <div className="text-sm font-semibold text-neutral-900">
               {CURRENT_USER.name}
             </div>
-            <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
+            <div className="text-xs text-neutral-400">
               {new Date().toLocaleDateString("en-US", {
                 month: "long",
                 day: "numeric",
@@ -442,115 +337,72 @@ export default function WritePage() {
           {/* Overlay */}
           <div
             onClick={() => setShowPublishPanel(false)}
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "rgba(0,0,0,0.35)",
-              zIndex: 499,
-            }}
+            className="fixed inset-0 bg-black/35 z-[499]"
           />
-          <div className="publish-panel">
-            <div className="publish-panel-header">
-              <span className="publish-panel-title">Story preview</span>
+          <div className="fixed inset-y-0 right-0 w-[440px] max-w-full bg-white border-l border-neutral-200 z-[500] flex flex-col overflow-y-auto animate-[slideFromRight_0.25s_ease]">
+            <div className="flex items-center justify-between p-5 px-6 border-b border-neutral-200">
+              <span className="text-lg font-bold text-neutral-900">Story preview</span>
               <button
                 onClick={() => setShowPublishPanel(false)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  color: "var(--text-secondary)",
-                }}
+                className="bg-transparent border-none cursor-pointer flex items-center text-neutral-500 hover:text-neutral-900 transition-colors"
                 aria-label="Close"
               >
                 <CloseCircle size={22} />
               </button>
             </div>
 
-            <div className="publish-panel-body">
+            <div className="p-6 flex-1">
               {/* Preview card */}
-              <div className="publish-panel-section">
-                <div className="publish-panel-preview">
+              <div className="mb-7">
+                <div className="bg-neutral-50 border border-neutral-100 rounded-md overflow-hidden">
                   {thumbnail ? (
                     <img
                       src={thumbnail}
                       alt="Cover"
-                      className="publish-panel-preview-img"
+                      className="w-full h-[160px] object-cover block bg-neutral-100"
                     />
                   ) : (
                     <button
                       onClick={() => thumbnailInputRef.current?.click()}
-                      style={{
-                        width: "100%",
-                        height: 160,
-                        background: "var(--bg-tertiary)",
-                        border: "none",
-                        cursor: "pointer",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: 8,
-                        color: "var(--text-muted)",
-                        fontFamily: "var(--font-sans)",
-                      }}
+                      className="w-full h-[160px] bg-neutral-100 border-none cursor-pointer flex flex-col items-center justify-center gap-2 text-neutral-400 font-sans hover:bg-neutral-200 transition-colors"
                     >
                       <ImageIcon size={28} />
-                      <span style={{ fontSize: 13 }}>Add cover image</span>
+                      <span className="text-[13px]">Add cover image</span>
                     </button>
                   )}
                   {thumbnail && (
                     <button
                       onClick={() => thumbnailInputRef.current?.click()}
-                      style={{
-                        width: "100%",
-                        textAlign: "center",
-                        fontSize: 12,
-                        color: "var(--accent)",
-                        padding: "6px",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        fontFamily: "var(--font-sans)",
-                        borderTop: "1px solid var(--border-light)",
-                      }}
+                      className="w-full text-center text-xs text-green-700 p-1.5 bg-transparent border-none cursor-pointer font-sans border-t border-neutral-100 hover:bg-neutral-50 transition-colors"
                     >
                       Change image
                     </button>
                   )}
-                  <div className="publish-panel-preview-text">
-                    <div className="publish-panel-preview-title">
+                  <div className="p-3.5">
+                    <div className="text-base font-bold text-neutral-900 leading-snug mb-1.5">
                       {title || "Story title…"}
                     </div>
-                    <div className="publish-panel-preview-subtitle">
+                    <div className="text-[13px] text-neutral-500 leading-relaxed">
                       {subtitle || "Story subtitle…"}
                     </div>
                   </div>
                 </div>
-                <p className="publish-panel-hint">
+                <p className="text-xs text-neutral-400 mt-1.5">
                   Note: Changes here affect how your story appears in public
                   places like BlogNest's homepage — not the story itself.
                 </p>
               </div>
 
               {/* Tags */}
-              <div className="publish-panel-section">
-                <span className="publish-panel-label">Add up to 5 topics</span>
-                <p
-                  style={{
-                    fontSize: 13,
-                    color: "var(--text-secondary)",
-                    marginBottom: 10,
-                  }}
-                >
+              <div className="mb-7">
+                <span className="text-[13px] font-semibold text-neutral-500 uppercase tracking-wide mb-2.5 block">Add up to 5 topics</span>
+                <p className="text-[13px] text-neutral-500 mb-2.5">
                   Topics make it easier for readers to find your story.
                 </p>
 
-                <div style={{ display: "flex", gap: 8 }}>
+                <div className="flex gap-2">
                   <input
-                    className="publish-panel-input"
-                    style={{ flex: 1, borderRadius: 100, padding: "8px 16px" }}
+                    className="w-full border border-neutral-200 rounded-full px-4 py-2 text-[15px] text-neutral-900 bg-white outline-none font-sans transition-colors focus:border-neutral-900 box-border flex-1"
                     placeholder="Add a topic…"
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
@@ -568,17 +420,7 @@ export default function WritePage() {
                   <button
                     onClick={() => addTag(tagInput)}
                     disabled={!tagInput.trim() || tags.length >= 5}
-                    style={{
-                      background: "var(--text-primary)",
-                      color: "white",
-                      border: "none",
-                      borderRadius: 100,
-                      padding: "8px 14px",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      opacity: !tagInput.trim() || tags.length >= 5 ? 0.4 : 1,
-                    }}
+                    className="bg-neutral-900 text-white border-none rounded-full px-3.5 py-2 cursor-pointer flex items-center disabled:opacity-40 transition-opacity hover:opacity-85"
                   >
                     <Add size={18} />
                   </button>
@@ -586,12 +428,12 @@ export default function WritePage() {
 
                 {/* Current tags */}
                 {tags.length > 0 && (
-                  <div className="publish-panel-tags">
+                  <div className="flex flex-wrap gap-2 mt-2">
                     {tags.map((tag) => (
-                      <span key={tag} className="publish-panel-tag">
+                      <span key={tag} className="flex items-center gap-1 bg-neutral-100 text-neutral-500 text-[13px] px-2.5 py-1 rounded-full cursor-pointer transition-colors hover:bg-neutral-200">
                         {tag}
                         <span
-                          className="publish-panel-tag-remove"
+                          className="flex items-center text-neutral-400 cursor-pointer ml-0.5 text-base leading-none hover:text-neutral-600"
                           onClick={() => removeTag(tag)}
                         >
                           ×
@@ -602,17 +444,11 @@ export default function WritePage() {
                 )}
 
                 {/* Suggested tags */}
-                <div style={{ marginTop: 12 }}>
-                  <p
-                    style={{
-                      fontSize: 12,
-                      color: "var(--text-muted)",
-                      marginBottom: 8,
-                    }}
-                  >
+                <div className="mt-3">
+                  <p className="text-xs text-neutral-400 mb-2">
                     Suggested:
                   </p>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  <div className="flex flex-wrap gap-1.5">
                     {SUGGESTED_TAGS.filter((t) => !tags.includes(t))
                       .slice(0, 8)
                       .map((tag) => (
@@ -620,18 +456,7 @@ export default function WritePage() {
                           key={tag}
                           onClick={() => addTag(tag)}
                           disabled={tags.length >= 5}
-                          style={{
-                            background: "var(--bg-tertiary)",
-                            color: "var(--text-secondary)",
-                            fontSize: 12,
-                            padding: "4px 10px",
-                            borderRadius: 100,
-                            border: "none",
-                            cursor: "pointer",
-                            fontFamily: "var(--font-sans)",
-                            transition: "background 0.15s",
-                            opacity: tags.length >= 5 ? 0.4 : 1,
-                          }}
+                          className="bg-neutral-100 text-neutral-500 text-xs px-2.5 py-1 rounded-full border-none cursor-pointer font-sans transition-colors hover:bg-neutral-200 disabled:opacity-40"
                         >
                           + {tag}
                         </button>
@@ -641,8 +466,8 @@ export default function WritePage() {
               </div>
 
               {/* Options */}
-              <div className="publish-panel-section">
-                <span className="publish-panel-label">Publishing options</span>
+              <div className="mb-7">
+                <span className="text-[13px] font-semibold text-neutral-500 uppercase tracking-wide mb-2.5 block">Publishing options</span>
                 <div>
                   <ToggleRow
                     label="Member only story"
@@ -654,16 +479,16 @@ export default function WritePage() {
               </div>
             </div>
 
-            <div className="publish-panel-footer">
+            <div className="p-5 px-6 border-t border-neutral-200 flex items-center gap-3">
               <button
-                className="btn-publish-now"
+                className="bg-green-700 text-white rounded-full px-6 py-2.5 text-[15px] font-semibold transition-colors font-sans border-none cursor-pointer hover:bg-green-800 disabled:opacity-40 disabled:cursor-not-allowed"
                 onClick={handlePublish}
                 disabled={!canPublish}
               >
                 Publish now
               </button>
               <button
-                className="btn-schedule"
+                className="text-sm text-neutral-500 bg-transparent border-none cursor-pointer font-sans transition-colors hover:text-neutral-900"
                 onClick={() => setShowPublishPanel(false)}
               >
                 Save as draft
@@ -687,20 +512,21 @@ interface ToggleRowProps {
 function ToggleRow({ label, sublabel, checked, onChange }: ToggleRowProps) {
   const id = label.replace(/\s+/g, "-").toLowerCase();
   return (
-    <div className="toggle-row">
+    <div className="flex items-center justify-between py-3 border-b border-neutral-100 last:border-none">
       <div>
-        <div className="toggle-label">{label}</div>
-        {sublabel && <div className="toggle-sublabel">{sublabel}</div>}
+        <div className="text-sm font-medium text-neutral-900">{label}</div>
+        {sublabel && <div className="text-xs text-neutral-400 mt-0.5">{sublabel}</div>}
       </div>
-      <label className="toggle-switch">
+      <label className="relative w-10 h-[22px] shrink-0 cursor-pointer">
         <input
           id={id}
           type="checkbox"
+          className="peer sr-only"
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
         />
-        <span className="toggle-track" />
-        <span className="toggle-thumb" />
+        <span className="absolute inset-0 rounded-full bg-neutral-200 transition-colors peer-checked:bg-green-700" />
+        <span className="absolute top-[3px] left-[3px] w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-[18px] pointer-events-none shadow-[0_1px_3px_rgba(0,0,0,0.2)]" />
       </label>
     </div>
   );

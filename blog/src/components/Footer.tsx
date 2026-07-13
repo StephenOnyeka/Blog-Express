@@ -24,13 +24,13 @@ export default function Footer() {
   };
 
   return (
-    <footer className="footer">
-      <div className="footer-inner" style={{ flexDirection: 'column', gap: 20 }}>
+    <footer className="border-t border-neutral-200 mt-20 py-8 bg-white">
+      <div className="max-w-[1192px] mx-auto px-6 flex flex-col gap-5 items-center justify-center">
         <form
           onSubmit={handleSubscribe}
-          style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}
+          className="flex flex-wrap items-center justify-center gap-2"
         >
-          <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
+          <span className="text-sm text-neutral-500">
             Get the weekly digest
           </span>
           <input
@@ -39,33 +39,28 @@ export default function Footer() {
             value={email}
             onChange={e => { setEmail(e.target.value); setStatus('idle'); }}
             required
-            style={{
-              border: '1px solid var(--border-light)', borderRadius: 100,
-              padding: '8px 16px', fontSize: 14, outline: 'none',
-              fontFamily: 'var(--font-sans)', minWidth: 220,
-            }}
+            className="border border-neutral-200 rounded-full px-4 py-2 text-sm outline-none font-sans min-w-[220px] focus:border-neutral-400"
           />
           <button
             type="submit"
             disabled={status === 'loading'}
-            className="btn-getstarted"
-            style={{ padding: '8px 18px' }}
+            className="bg-neutral-900 text-white rounded-full px-[18px] py-2 text-sm font-medium transition-opacity hover:opacity-85 disabled:opacity-50"
           >
             {status === 'loading' ? 'Subscribing…' : 'Subscribe'}
           </button>
           {status === 'done' && (
-            <span style={{ fontSize: 13, color: 'var(--accent, green)' }}>
+            <span className="text-[13px] text-green-700">
               Check your inbox to confirm!
             </span>
           )}
           {status === 'error' && (
-            <span style={{ fontSize: 13, color: 'red' }}>Something went wrong.</span>
+            <span className="text-[13px] text-red-500">Something went wrong.</span>
           )}
         </form>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'center' }}>
+        <div className="flex flex-wrap justify-center gap-4">
           {links.map(link => (
-            <span key={link} className="footer-link" style={{ cursor: 'pointer' }}>{link}</span>
+            <span key={link} className="text-[13px] text-neutral-500 hover:text-neutral-900 transition-colors cursor-pointer">{link}</span>
           ))}
         </div>
       </div>

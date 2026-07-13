@@ -14,24 +14,24 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="sidebar">
+    <aside className="sticky top-20 self-start hidden lg:block">
       {/* Staff Picks */}
-      <section className="sidebar-section">
-        <div className="sidebar-section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      <section className="mb-6">
+        <div className="flex items-center gap-1.5 text-sm font-semibold text-neutral-900 mb-4">
           <Star1 size={16} variant="Bold" color="#ffc017" />
           Staff Picks
         </div>
         {STAFF_PICKS.map(article => (
           <StaffPickCard key={article.id} article={article} />
         ))}
-        <Link to="/" className="see-more-link">See the full list</Link>
+        <Link to="/" className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors mt-3 inline-block">See the full list</Link>
       </section>
 
-      <div style={{ height: 1, background: 'var(--border-light)', margin: '8px 0 24px' }} />
+      <div className="h-px bg-neutral-100 my-6" />
 
       {/* Trending */}
-      <section className="sidebar-section">
-        <div className="sidebar-section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      <section className="mb-6">
+        <div className="flex items-center gap-1.5 text-sm font-semibold text-neutral-900 mb-4">
           <TrendUp size={16} />
           Trending on BlogNest
         </div>
@@ -40,63 +40,67 @@ export default function Sidebar() {
         ))}
       </section>
 
-      <div style={{ height: 1, background: 'var(--border-light)', margin: '8px 0 24px' }} />
+      <div className="h-px bg-neutral-100 my-6" />
 
       {/* Who to Follow */}
-      <section className="sidebar-section">
-        <div className="sidebar-section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      <section className="mb-6">
+        <div className="flex items-center gap-1.5 text-sm font-semibold text-neutral-900 mb-4">
           <People size={16} />
           Who to Follow
         </div>
         {WHO_TO_FOLLOW.map(author => (
-          <div key={author.id} className="follow-card">
-            <div className="follow-card-left">
-              <div className="follow-card-avatar">
-                <img src={author.avatar} alt={author.name} />
+          <div key={author.id} className="flex items-center justify-between gap-3 mb-5">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 bg-neutral-100">
+                <img src={author.avatar} alt={author.name} className="w-full h-full object-cover" />
               </div>
-              <div>
-                <Link to={`/profile/${author.username}`} className="follow-card-name hover-underline">
+              <div className="min-w-0">
+                <Link to={`/profile/${author.username}`} className="text-[13px] font-semibold text-neutral-900 truncate block hover:underline">
                   {author.name}
                 </Link>
-                <p className="follow-card-bio">{author.bio}</p>
+                <p className="text-[12px] text-neutral-500 line-clamp-1">{author.bio}</p>
               </div>
             </div>
             <button
-              className={`btn-follow ${followed[author.id] ? 'following' : ''}`}
+              className={`shrink-0 text-xs font-medium rounded-full px-3 py-1.5 border transition-colors ${
+                followed[author.id]
+                  ? 'bg-neutral-900 text-white border-neutral-900 hover:opacity-80'
+                  : 'border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white'
+              }`}
               onClick={() => toggleFollow(author.id)}
             >
               {followed[author.id] ? 'Following' : 'Follow'}
             </button>
           </div>
         ))}
-        <Link to="/" className="see-more-link" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        <Link to="/" className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors flex items-center gap-1 mt-1">
           See more suggestions <ArrowRight2 size={14} />
         </Link>
       </section>
 
-      <div style={{ height: 1, background: 'var(--border-light)', margin: '8px 0 24px' }} />
+      <div className="h-px bg-neutral-100 my-6" />
 
       {/* Recommended Topics */}
-      <section className="sidebar-section">
-        <div className="sidebar-section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      <section className="mb-6">
+        <div className="flex items-center gap-1.5 text-sm font-semibold text-neutral-900 mb-4">
           <Tag2 size={16} />
           Recommended Topics
         </div>
-        <div className="topics-grid">
+        <div className="flex flex-wrap gap-2">
           {RECOMMENDED_TOPICS.map(topic => (
-            <span key={topic} className="topic-tag">{topic}</span>
+            <span key={topic} className="bg-neutral-100 text-neutral-700 text-sm px-3 py-1.5 rounded-full cursor-pointer hover:bg-neutral-200 transition-colors">{topic}</span>
           ))}
         </div>
-        <Link to="/" className="see-more-link" style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 12 }}>
+        <Link to="/" className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors flex items-center gap-1 mt-3">
           See more topics <ArrowRight2 size={14} />
         </Link>
       </section>
 
       {/* Footer links */}
-      <div style={{ marginTop: 32 }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px' }}>
+      <div className="mt-8">
+        <div className="flex flex-wrap gap-x-4 gap-y-2">
           {['Help', 'Status', 'About', 'Careers', 'Blog', 'Privacy', 'Terms', 'Text to speech', 'Teams'].map(link => (
-            <span key={link} className="footer-link" style={{ cursor: 'pointer' }}>{link}</span>
+            <span key={link} className="text-[13px] text-neutral-400 hover:text-neutral-900 transition-colors cursor-pointer">{link}</span>
           ))}
         </div>
       </div>
@@ -106,14 +110,14 @@ export default function Sidebar() {
 
 function StaffPickCard({ article }: { article: Article }) {
   return (
-    <Link to={`/article/${article.id}`} className="staff-pick-card" style={{ textDecoration: 'none' }}>
-      <div className="staff-pick-author-avatar">
-        <img src={article.author.avatar} alt={article.author.name} />
+    <Link to={`/article/${article.id}`} className="flex items-start gap-2.5 mb-5 no-underline group">
+      <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 bg-neutral-100 mt-0.5">
+        <img src={article.author.avatar} alt={article.author.name} className="w-full h-full object-cover" />
       </div>
-      <div className="staff-pick-info">
-        <div className="staff-pick-author">{article.author.name}</div>
-        <div className="staff-pick-title">{article.title}</div>
-        <div className="staff-pick-meta">{formatClaps(article.claps)} claps · {article.readTime} min read</div>
+      <div className="min-w-0">
+        <div className="text-xs font-medium text-neutral-500 mb-1">{article.author.name}</div>
+        <div className="text-sm font-bold text-neutral-900 leading-snug mb-1 group-hover:text-neutral-500 transition-colors line-clamp-2">{article.title}</div>
+        <div className="text-[12px] text-neutral-400">{formatClaps(article.claps)} claps · {article.readTime} min read</div>
       </div>
     </Link>
   );
@@ -121,17 +125,17 @@ function StaffPickCard({ article }: { article: Article }) {
 
 function TrendingCard({ article, index }: { article: Article; index: number }) {
   return (
-    <Link to={`/article/${article.id}`} className="trending-card" style={{ textDecoration: 'none' }}>
-      <span className="trending-number">0{index}</span>
-      <div className="trending-info">
-        <div className="trending-author">
-          <div className="trending-author-avatar">
-            <img src={article.author.avatar} alt={article.author.name} />
+    <Link to={`/article/${article.id}`} className="flex items-start gap-3 mb-5 no-underline group">
+      <span className="text-3xl font-bold text-neutral-200 leading-none w-6 shrink-0">0{index}</span>
+      <div className="min-w-0">
+        <div className="flex items-center gap-1.5 mb-1">
+          <div className="w-5 h-5 rounded-full overflow-hidden bg-neutral-100 shrink-0">
+            <img src={article.author.avatar} alt={article.author.name} className="w-full h-full object-cover" />
           </div>
-          <span className="trending-author-name">{article.author.name}</span>
+          <span className="text-[12px] font-medium text-neutral-600">{article.author.name}</span>
         </div>
-        <div className="trending-title">{article.title}</div>
-        <div className="trending-meta">{article.publishedAt} · {article.readTime} min read</div>
+        <div className="text-sm font-bold text-neutral-900 leading-snug mb-1 group-hover:text-neutral-500 transition-colors line-clamp-2">{article.title}</div>
+        <div className="text-[12px] text-neutral-400">{article.publishedAt} · {article.readTime} min read</div>
       </div>
     </Link>
   );

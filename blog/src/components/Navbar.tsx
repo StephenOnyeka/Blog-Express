@@ -31,15 +31,16 @@ export default function Navbar({ onSignIn }: NavbarProps) {
   }, [isLoggedIn]);
 
   return (
-    <nav className="navbar">
-      <div className="navbar-inner">
+    <nav className="sticky top-0 z-[100] bg-white border-b border-neutral-200 py-3">
+      <div className="flex items-center justify-between max-w-[1192px] mx-auto px-6 gap-4">
         {/* Logo */}
-        <Link to="/" className="navbar-logo">BlogNest</Link>
+        <Link to="/" className="font-serif text-[26px] font-bold text-neutral-900 tracking-[-0.5px] shrink-0">BlogNest</Link>
 
         {/* Search */}
-        <div className="navbar-search">
-          <SearchNormal1 size={16} color="var(--text-secondary)" />
+        <div className="flex-1 max-w-[280px] flex items-center gap-2 bg-neutral-50 rounded-full px-4 py-2 text-neutral-500 text-sm transition-colors hover:bg-neutral-100">
+          <SearchNormal1 size={16} color="currentColor" />
           <input
+            className="border-none bg-transparent outline-none text-sm text-neutral-900 w-full font-sans placeholder-neutral-500"
             type="text"
             placeholder="Search"
             value={search}
@@ -49,27 +50,27 @@ export default function Navbar({ onSignIn }: NavbarProps) {
         </div>
 
         {/* Actions */}
-        <div className="navbar-actions">
+        <div className="flex items-center gap-4">
           {isLoggedIn ? (
             <>
-              <Link to="/write" className="btn-write">
-                <Edit size={18} color="var(--text-secondary)" />
+              <Link to="/write" className="flex items-center gap-1.5 text-neutral-500 text-[15px] font-normal transition-colors py-2 hover:text-neutral-900">
+                <Edit size={18} color="currentColor" />
                 <span>Write</span>
               </Link>
               <button
-                className="navbar-avatar"
-                style={{ position: 'relative' }}
+                className="w-9 h-9 rounded-full overflow-hidden cursor-pointer bg-neutral-100 flex items-center justify-center shrink-0 relative"
                 aria-label="Notifications"
                 onClick={async () => {
                    await api.patch('/notifications/read-all');
                    setUnreadCount(0);
                 }}
               >
-                <Notification size={20} color="var(--text-secondary)" />
-                {unreadCount > 0 && <span className="notification-dot"></span>}
+                <Notification size={20} className="text-neutral-500" />
+                {unreadCount > 0 && <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>}
               </button>
-              <Link to={`/profile/${user?.username}`} className="navbar-avatar" aria-label="Profile">
+              <Link to={`/profile/${user?.username}`} className="w-9 h-9 rounded-full overflow-hidden cursor-pointer bg-neutral-100 flex items-center justify-center shrink-0" aria-label="Profile">
                 <img
+                  className="w-full h-full object-cover"
                   src={user?.avatar || "https://api.dicebear.com/9.x/avataaars/svg?seed=me&backgroundColor=ffd5dc"}
                   alt="Your avatar"
                 />
@@ -77,12 +78,12 @@ export default function Navbar({ onSignIn }: NavbarProps) {
             </>
           ) : (
             <>
-              <Link to="/write" className="btn-write">
-                <Edit size={18} color="var(--text-secondary)" />
+              <Link to="/write" className="flex items-center gap-1.5 text-neutral-500 text-[15px] font-normal transition-colors py-2 hover:text-neutral-900">
+                <Edit size={18} color="currentColor" />
                 <span>Write</span>
               </Link>
-              <button className="btn-signin" onClick={onSignIn}>Sign in</button>
-              <button className="btn-getstarted" onClick={onSignIn}>Get started</button>
+              <button className="text-sm text-neutral-500 font-normal py-2 transition-colors hover:text-neutral-900" onClick={onSignIn}>Sign in</button>
+              <button className="bg-neutral-900 text-white rounded-full px-5 py-2 text-sm font-medium transition-opacity hover:opacity-85" onClick={onSignIn}>Get started</button>
             </>
           )}
         </div>
@@ -127,22 +128,22 @@ export function AuthModal({ isOpen, onClose, mode, onToggleMode, onSuccess }: Au
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-box" onClick={e => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose} aria-label="Close">
+    <div className="fixed inset-0 bg-white/95 z-[999] flex items-center justify-center p-6" onClick={onClose}>
+      <div className="w-full max-w-[400px] bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-10 relative flex flex-col items-center" onClick={e => e.stopPropagation()}>
+        <button className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-900 transition-colors" onClick={onClose} aria-label="Close">
           <CloseCircle size={22} />
         </button>
-        <h2 className="modal-title">
+        <h2 className="font-serif text-[28px] text-neutral-900 mb-8 mt-2">
           {mode === 'signin' ? 'Welcome back.' : 'Join BlogNest.'}
         </h2>
 
-        {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+        {error && <div className="text-red-500 mb-2.5">{error}</div>}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="w-full">
           {mode === 'signup' && (
             <>
               <input
-                className="modal-input"
+                className="w-full border-b border-neutral-300 py-2.5 text-[15px] text-neutral-900 mb-6 bg-transparent outline-none focus:border-neutral-900 focus:border-b-2 transition-colors"
                 type="text"
                 placeholder="Full Name"
                 value={name}
@@ -150,7 +151,7 @@ export function AuthModal({ isOpen, onClose, mode, onToggleMode, onSuccess }: Au
                 required
               />
               <input
-                className="modal-input"
+                className="w-full border-b border-neutral-300 py-2.5 text-[15px] text-neutral-900 mb-6 bg-transparent outline-none focus:border-neutral-900 focus:border-b-2 transition-colors"
                 type="text"
                 placeholder="Username"
                 value={username}
@@ -160,7 +161,7 @@ export function AuthModal({ isOpen, onClose, mode, onToggleMode, onSuccess }: Au
             </>
           )}
           <input
-            className="modal-input"
+            className="w-full border-b border-neutral-300 py-2.5 text-[15px] text-neutral-900 mb-6 bg-transparent outline-none focus:border-neutral-900 focus:border-b-2 transition-colors"
             type="email"
             placeholder="Email"
             value={email}
@@ -168,23 +169,23 @@ export function AuthModal({ isOpen, onClose, mode, onToggleMode, onSuccess }: Au
             required
           />
           <input
-            className="modal-input"
+            className="w-full border-b border-neutral-300 py-2.5 text-[15px] text-neutral-900 mb-6 bg-transparent outline-none focus:border-neutral-900 focus:border-b-2 transition-colors"
             type="password"
             placeholder="Password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
           />
-          <button className="modal-submit" type="submit">
+          <button className="w-full bg-neutral-900 text-white rounded-full py-3 mt-4 text-[15px] font-medium transition-opacity hover:opacity-85" type="submit">
             {mode === 'signin' ? 'Sign in' : 'Create account'}
           </button>
         </form>
 
-        <p className="modal-footer">
+        <p className="mt-8 text-sm text-neutral-500">
           {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
-          <a onClick={onToggleMode}>
+          <button type="button" className="text-neutral-900 font-medium cursor-pointer" onClick={onToggleMode}>
             {mode === 'signin' ? 'Sign up' : 'Sign in'}
-          </a>
+          </button>
         </p>
       </div>
     </div>
