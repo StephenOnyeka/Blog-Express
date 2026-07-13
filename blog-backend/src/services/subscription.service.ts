@@ -73,9 +73,9 @@ class SubscriptionService {
     try {
       await sendMail({
         to: email,
-        subject: 'Verify your BlogNest subscription',
+        subject: 'Verify your BlogExpress subscription',
         html: `
-          <h1>Welcome to BlogNest updates!</h1>
+          <h1>Welcome to BlogExpress updates!</h1>
           <p>Please confirm your subscription by clicking the link below:</p>
           <a href="${url}">${url}</a>
         `,

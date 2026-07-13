@@ -189,7 +189,8 @@ export default function WritePage() {
             Your story is live!
           </h1>
           <p className="text-base text-neutral-500 max-w-[400px]">
-            "{title}" has been published to BlogNest. Share it with the world!
+            "{title}" has been published to BlogExpress. Share it with the
+            world!
           </p>
           <div className="flex gap-3 mt-2">
             <button
@@ -219,14 +220,15 @@ export default function WritePage() {
           onClick={() => navigate(-1)}
           className="flex items-center gap-1.5 text-neutral-500 bg-transparent border-none cursor-pointer text-sm font-sans p-0 shrink-0 hover:text-neutral-900 transition-colors"
         >
-          <ArrowLeft size={16}  variant="Linear" color="currentColor" />
+          <ArrowLeft size={16} variant="Linear" color="currentColor" />
           <span className="flex items-center gap-1">
             {saveStatus === "saving" && (
               <span className="text-neutral-400">Saving…</span>
             )}
             {saveStatus === "saved" && (
               <span className="text-green-700 flex items-center gap-[3px]">
-                <TickCircle size={14}  variant="Linear" color="currentColor" /> Saved
+                <TickCircle size={14} variant="Linear" color="currentColor" />{" "}
+                Saved
               </span>
             )}
             {saveStatus === "draft" && (
@@ -247,7 +249,7 @@ export default function WritePage() {
             onClick={() => setShowPublishPanel(true)}
             className="bg-transparent border-none cursor-pointer flex items-center text-neutral-500 p-1 hover:text-neutral-900 transition-colors"
           >
-            <Setting2 size={20}  variant="Linear" color="currentColor" />
+            <Setting2 size={20} variant="Linear" color="currentColor" />
           </button>
           <button
             className="bg-neutral-900 text-white rounded-full px-5 py-2 text-sm font-medium transition-opacity hover:opacity-85 disabled:opacity-40"
@@ -341,13 +343,15 @@ export default function WritePage() {
           />
           <div className="fixed inset-y-0 right-0 w-[440px] max-w-full bg-white border-l border-neutral-200 z-[500] flex flex-col overflow-y-auto animate-[slideFromRight_0.25s_ease]">
             <div className="flex items-center justify-between p-5 px-6 border-b border-neutral-200">
-              <span className="text-lg font-bold text-neutral-900">Story preview</span>
+              <span className="text-lg font-bold text-neutral-900">
+                Story preview
+              </span>
               <button
                 onClick={() => setShowPublishPanel(false)}
                 className="bg-transparent border-none cursor-pointer flex items-center text-neutral-500 hover:text-neutral-900 transition-colors"
                 aria-label="Close"
               >
-                <CloseCircle size={22}  variant="Linear" color="currentColor" />
+                <CloseCircle size={22} variant="Linear" color="currentColor" />
               </button>
             </div>
 
@@ -366,7 +370,11 @@ export default function WritePage() {
                       onClick={() => thumbnailInputRef.current?.click()}
                       className="w-full h-[160px] bg-neutral-100 border-none cursor-pointer flex flex-col items-center justify-center gap-2 text-neutral-400 font-sans hover:bg-neutral-200 transition-colors"
                     >
-                      <ImageIcon size={28}  variant="Linear" color="currentColor" />
+                      <ImageIcon
+                        size={28}
+                        variant="Linear"
+                        color="currentColor"
+                      />
                       <span className="text-[13px]">Add cover image</span>
                     </button>
                   )}
@@ -389,13 +397,15 @@ export default function WritePage() {
                 </div>
                 <p className="text-xs text-neutral-400 mt-1.5">
                   Note: Changes here affect how your story appears in public
-                  places like BlogNest's homepage — not the story itself.
+                  places like BlogExpress's homepage — not the story itself.
                 </p>
               </div>
 
               {/* Tags */}
               <div className="mb-7">
-                <span className="text-[13px] font-semibold text-neutral-500 uppercase tracking-wide mb-2.5 block">Add up to 5 topics</span>
+                <span className="text-[13px] font-semibold text-neutral-500 uppercase tracking-wide mb-2.5 block">
+                  Add up to 5 topics
+                </span>
                 <p className="text-[13px] text-neutral-500 mb-2.5">
                   Topics make it easier for readers to find your story.
                 </p>
@@ -422,7 +432,7 @@ export default function WritePage() {
                     disabled={!tagInput.trim() || tags.length >= 5}
                     className="bg-neutral-900 text-white border-none rounded-full px-3.5 py-2 cursor-pointer flex items-center disabled:opacity-40 transition-opacity hover:opacity-85"
                   >
-                    <Add size={18}  variant="Linear" color="currentColor" />
+                    <Add size={18} variant="Linear" color="currentColor" />
                   </button>
                 </div>
 
@@ -430,7 +440,10 @@ export default function WritePage() {
                 {tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {tags.map((tag) => (
-                      <span key={tag} className="flex items-center gap-1 bg-neutral-100 text-neutral-500 text-[13px] px-2.5 py-1 rounded-full cursor-pointer transition-colors hover:bg-neutral-200">
+                      <span
+                        key={tag}
+                        className="flex items-center gap-1 bg-neutral-100 text-neutral-500 text-[13px] px-2.5 py-1 rounded-full cursor-pointer transition-colors hover:bg-neutral-200"
+                      >
                         {tag}
                         <span
                           className="flex items-center text-neutral-400 cursor-pointer ml-0.5 text-base leading-none hover:text-neutral-600"
@@ -445,9 +458,7 @@ export default function WritePage() {
 
                 {/* Suggested tags */}
                 <div className="mt-3">
-                  <p className="text-xs text-neutral-400 mb-2">
-                    Suggested:
-                  </p>
+                  <p className="text-xs text-neutral-400 mb-2">Suggested:</p>
                   <div className="flex flex-wrap gap-1.5">
                     {SUGGESTED_TAGS.filter((t) => !tags.includes(t))
                       .slice(0, 8)
@@ -467,7 +478,9 @@ export default function WritePage() {
 
               {/* Options */}
               <div className="mb-7">
-                <span className="text-[13px] font-semibold text-neutral-500 uppercase tracking-wide mb-2.5 block">Publishing options</span>
+                <span className="text-[13px] font-semibold text-neutral-500 uppercase tracking-wide mb-2.5 block">
+                  Publishing options
+                </span>
                 <div>
                   <ToggleRow
                     label="Member only story"
@@ -515,7 +528,9 @@ function ToggleRow({ label, sublabel, checked, onChange }: ToggleRowProps) {
     <div className="flex items-center justify-between py-3 border-b border-neutral-100 last:border-none">
       <div>
         <div className="text-sm font-medium text-neutral-900">{label}</div>
-        {sublabel && <div className="text-xs text-neutral-400 mt-0.5">{sublabel}</div>}
+        {sublabel && (
+          <div className="text-xs text-neutral-400 mt-0.5">{sublabel}</div>
+        )}
       </div>
       <label className="relative w-10 h-[22px] shrink-0 cursor-pointer">
         <input

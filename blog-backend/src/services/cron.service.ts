@@ -35,7 +35,7 @@ class CronService {
       try {
         await sendMail({
           to: sub.email,
-          subject: 'Your weekly BlogNest digest',
+          subject: 'Your weekly BlogExpress digest',
           html: this.buildDigestHtml(articles),
         });
         sent += 1;
@@ -57,7 +57,7 @@ class CronService {
     return `
       <h1>Here are your top articles for the week</h1>
       <ul>${items}</ul>
-      <p style="color:#888;font-size:12px">You are receiving this because you subscribed to BlogNest.</p>
+      <p style="color:#888;font-size:12px">You are receiving this because you subscribed to BlogExpress.</p>
     `;
   }
 
