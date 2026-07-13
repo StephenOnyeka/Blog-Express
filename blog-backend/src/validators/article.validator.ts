@@ -1,6 +1,6 @@
-const { z } = require('zod');
+import { z } from 'zod';
 
-const createArticleSchema = z.object({
+export const createArticleSchema = z.object({
   body: z.object({
     title: z.string().min(3).max(300),
     subtitle: z.string().max(500).optional(),
@@ -12,7 +12,7 @@ const createArticleSchema = z.object({
   }),
 });
 
-const updateArticleSchema = z.object({
+export const updateArticleSchema = z.object({
   body: z.object({
     title: z.string().min(3).max(300).optional(),
     subtitle: z.string().max(500).optional(),
@@ -23,8 +23,3 @@ const updateArticleSchema = z.object({
     is_draft: z.boolean().optional(),
   }),
 });
-
-module.exports = {
-  createArticleSchema,
-  updateArticleSchema,
-};

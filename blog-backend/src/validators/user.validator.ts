@@ -1,6 +1,6 @@
-const { z } = require('zod');
+import { z } from 'zod';
 
-const updateUserSchema = z.object({
+export const updateUserSchema = z.object({
   body: z.object({
     name: z.string().min(2).max(120).optional(),
     username: z.string().min(3).max(50).optional(),
@@ -8,7 +8,3 @@ const updateUserSchema = z.object({
     bio: z.string().max(1000).optional(),
   }),
 });
-
-module.exports = {
-  updateUserSchema,
-};
