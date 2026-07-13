@@ -1,8 +1,8 @@
-const prisma = require('../config/database');
-const NotificationService = require('./notification.service');
+import prisma from '../config/database';
+import NotificationService from './notification.service';
 
 class ArticleService {
-  static async createArticle(authorId, data) {
+  static async createArticle(authorId: string, data: Record<string, any>) {
     const readTime = Math.ceil((data.body || '').split(' ').length / 200); // 200 words per min
 
     const article = await prisma.article.create({
@@ -24,11 +24,11 @@ class ArticleService {
     return article;
   }
 
-  static async getArticles(query) {
+  static async getArticles(query: Record<string, any>) {
     const { page = 1, limit = 10, author_id, tags } = query;
     const skip = (page - 1) * limit;
 
-    const where = { is_draft: false };
+    const where: Record<string, any> = { is_draft: false };
     if (author_id) where.author_id = author_id;
     if (tags) where.tags = { hasSome: tags.split(',') };
 
@@ -50,7 +50,7 @@ class ArticleService {
     return { articles, total, page: Number(page), limit: Number(limit) };
   }
 
-  static async getArticleById(id) {
+  static async getArticleById(id: string) {
     const article = await prisma.article.findUnique({
       where: { id },
       include: {
@@ -64,7 +64,7 @@ class ArticleService {
     return article;
   }
 
-  static async updateArticle(id, authorId, data) {
+  static async updateArticle(id: string, authorId: string, data: Record<string, any>) {
     const article = await prisma.article.findUnique({ where: { id } });
     if (!article) throw new Error('Article not found');
     if (article.author_id !== authorId) throw new Error('Forbidden');
@@ -92,7 +92,7 @@ class ArticleService {
     return updated;
   }
 
-  static async deleteArticle(id, authorId) {
+  static async deleteArticle(id: string, authorId: string) {
     const article = await prisma.article.findUnique({ where: { id } });
     if (!article) throw new Error('Article not found');
     if (article.author_id !== authorId) throw new Error('Forbidden');
@@ -102,4 +102,4 @@ class ArticleService {
   }
 }
 
-module.exports = ArticleService;
+export default ArticleService;

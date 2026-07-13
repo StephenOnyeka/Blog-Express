@@ -1,10 +1,15 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const prisma = require('../config/database');
-const env = require('../config/env');
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import prisma from '../config/database';
+import env from '../config/env';
 
 class AuthService {
-  static async register({ name, username, email, password }) {
+  static async register({ name, username, email, password }: {
+    name: string;
+    username: string;
+    email: string;
+    password: string;
+  }) {
     const existingUser = await prisma.user.findFirst({
       where: {
         OR: [{ email }, { username }],
@@ -31,7 +36,7 @@ class AuthService {
     return { user: this.excludePassword(user), token };
   }
 
-  static async login({ email, password }) {
+  static async login({ email, password }: { email: string; password: string }) {
     const user = await prisma.user.findUnique({
       where: { email },
     });
@@ -49,16 +54,16 @@ class AuthService {
     return { user: this.excludePassword(user), token };
   }
 
-  static generateToken(userId) {
+  static generateToken(userId: string) {
     return jwt.sign({ id: userId, sub: userId }, env.JWT_SECRET, {
       expiresIn: env.JWT_EXPIRES_IN,
     });
   }
 
-  static excludePassword(user) {
+  static excludePassword(user: Record<string, any>) {
     const { password_hash, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
 }
 
-module.exports = AuthService;
+export default AuthService;
