@@ -1,12 +1,12 @@
-const express = require('express');
-const subscriptionController = require('../controllers/subscription.controller');
-const validate = require('../middlewares/validate.middleware');
-const { subscribeSchema } = require('../validators/subscription.validator');
+import express from 'express';
+import SubscriptionController from '../controllers/subscription.controller';
+import validate from '../middlewares/validate.middleware';
+import { subscribeSchema } from '../validators/subscription.validator';
 
 const router = express.Router();
 
-router.post('/', validate(subscribeSchema), subscriptionController.subscribe);
-router.get('/verify', subscriptionController.verify);
-router.delete('/unsubscribe', subscriptionController.unsubscribe);
+router.post('/', validate(subscribeSchema), SubscriptionController.subscribe);
+router.get('/verify', SubscriptionController.verify);
+router.delete('/unsubscribe', SubscriptionController.unsubscribe);
 
-module.exports = router;
+export default router;

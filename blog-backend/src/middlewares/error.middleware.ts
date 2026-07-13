@@ -1,6 +1,7 @@
-const env = require('../config/env');
+import { Request, Response, NextFunction } from 'express';
+import env from '../config/env';
 
-const errorMiddleware = (err, req, res, next) => {
+const errorMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
 
   const status = err.statusCode || 500;
@@ -13,4 +14,4 @@ const errorMiddleware = (err, req, res, next) => {
   });
 };
 
-module.exports = errorMiddleware;
+export default errorMiddleware;

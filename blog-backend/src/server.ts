@@ -1,7 +1,7 @@
-const app = require('./app');
-const env = require('./config/env');
-const prisma = require('./config/database');
-const startJobs = require('./jobs/cleanup.job');
+import app from './app';
+import env from './config/env';
+import prisma from './config/database';
+import startJobs from './jobs/cleanup.job';
 
 const startServer = async () => {
   try {

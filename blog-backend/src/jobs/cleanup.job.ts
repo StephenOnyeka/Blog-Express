@@ -1,5 +1,5 @@
-const cron = require('node-cron');
-const CronService = require('../services/cron.service');
+import cron from 'node-cron';
+import CronService from '../services/cron.service';
 
 const startJobs = () => {
   // Weekly topic digest — every Monday at 08:00
@@ -38,4 +38,4 @@ const startJobs = () => {
   console.log('Background jobs initialized');
 };
 
-module.exports = startJobs;
+export default startJobs;

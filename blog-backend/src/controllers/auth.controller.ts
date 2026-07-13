@@ -1,11 +1,12 @@
-const authService = require('../services/auth.service');
+import { Request, Response, NextFunction } from 'express';
+import AuthService from '../services/auth.service';
 
 class AuthController {
-  static async register(req, res, next) {
+  static async register(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await authService.register(req.body);
+      const result = await AuthService.register(req.body);
       res.status(201).json(result);
-    } catch (error) {
+    } catch (error: any) {
       if (error.message.includes('already exists')) {
         return res.status(409).json({ message: error.message });
       }
@@ -13,11 +14,11 @@ class AuthController {
     }
   }
 
-  static async login(req, res, next) {
+  static async login(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await authService.login(req.body);
+      const result = await AuthService.login(req.body);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       if (error.message === 'Invalid email or password') {
         return res.status(401).json({ message: error.message });
       }
@@ -25,13 +26,13 @@ class AuthController {
     }
   }
 
-  static async getMe(req, res, next) {
+  static async getMe(req: Request, res: Response, next: NextFunction) {
     try {
-      res.json({ user: authService.excludePassword(req.user) });
+      res.json({ user: AuthService.excludePassword((req as any).user) });
     } catch (error) {
       next(error);
     }
   }
 }
 
-module.exports = AuthController;
+export default AuthController;

@@ -1,7 +1,7 @@
-const prisma = require('../config/database');
+import prisma from '../config/database';
 
 class NotificationService {
-  static async createForFollowers(article) {
+  static async createForFollowers(article: Record<string, any>) {
     const follows = await prisma.authorFollow.findMany({
       where: { author_id: article.author_id },
       select: { follower_id: true },
@@ -21,7 +21,7 @@ class NotificationService {
     });
   }
 
-  static async getMyNotifications(userId) {
+  static async getMyNotifications(userId: string) {
     return prisma.notification.findMany({
       where: { recipient_id: userId },
       orderBy: { created_at: 'desc' },
@@ -35,7 +35,7 @@ class NotificationService {
     });
   }
 
-  static async markAsRead(id, userId) {
+  static async markAsRead(id: string, userId: string) {
     await prisma.notification.updateMany({
       where: { id, recipient_id: userId },
       data: { is_read: true },
@@ -43,7 +43,7 @@ class NotificationService {
     return { success: true };
   }
 
-  static async markAllRead(userId) {
+  static async markAllRead(userId: string) {
     await prisma.notification.updateMany({
       where: { recipient_id: userId, is_read: false },
       data: { is_read: true },
@@ -51,7 +51,7 @@ class NotificationService {
     return { success: true };
   }
 
-  static async getUnreadCount(userId) {
+  static async getUnreadCount(userId: string) {
     const count = await prisma.notification.count({
       where: { recipient_id: userId, is_read: false },
     });
@@ -59,4 +59,4 @@ class NotificationService {
   }
 }
 
-module.exports = NotificationService;
+export default NotificationService;

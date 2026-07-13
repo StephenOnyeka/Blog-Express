@@ -1,10 +1,20 @@
-const crypto = require('crypto');
-const prisma = require('../config/database');
-const env = require('../config/env');
-const { sendMail } = require('../utils/mailer');
+import crypto from 'crypto';
+import prisma from '../config/database';
+import env from '../config/env';
+import { sendMail } from '../utils/mailer';
 
 class SubscriptionService {
-  static async subscribe({ email, topics = [], newsletter = true, userId }) {
+  static async subscribe({
+    email,
+    topics = [],
+    newsletter = true,
+    userId,
+  }: {
+    email: string;
+    topics?: string[];
+    newsletter?: boolean;
+    userId?: string;
+  }) {
     const existing = await prisma.emailSubscription.findFirst({ where: { email } });
 
     if (existing) {
@@ -38,7 +48,7 @@ class SubscriptionService {
     return { success: true, verified: false };
   }
 
-  static async verify(token) {
+  static async verify(token: string) {
     const sub = await prisma.emailSubscription.findFirst({ where: { verify_token: token } });
     if (!sub) throw new Error('Invalid token');
 
@@ -50,7 +60,7 @@ class SubscriptionService {
     return { success: true };
   }
 
-  static async unsubscribe(token) {
+  static async unsubscribe(token: string) {
     const sub = await prisma.emailSubscription.findFirst({ where: { unsubscribe_token: token } });
     if (!sub) throw new Error('Invalid token');
 
@@ -58,7 +68,7 @@ class SubscriptionService {
     return { success: true };
   }
 
-  static async sendVerificationEmail(email, token) {
+  static async sendVerificationEmail(email: string, token: string) {
     const url = `${env.FRONTEND_URL}/verify-email?token=${token}`;
     try {
       await sendMail({
@@ -71,9 +81,9 @@ class SubscriptionService {
         `,
       });
     } catch (error) {
-      console.error('Failed to send verification email:', error.message);
+      console.error('Failed to send verification email:', (error as Error).message);
     }
   }
 }
 
-module.exports = SubscriptionService;
+export default SubscriptionService;

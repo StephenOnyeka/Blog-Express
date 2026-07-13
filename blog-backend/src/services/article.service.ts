@@ -8,10 +8,10 @@ class ArticleService {
     const article = await prisma.article.create({
       data: {
         ...data,
-        author_id: authorId,
+        author: { connect: { id: authorId } },
         read_time: readTime || 1,
         published_at: data.is_draft ? null : new Date(),
-      },
+      } as any,
       include: {
         author: { select: { id: true, name: true, username: true, avatar: true } },
       },

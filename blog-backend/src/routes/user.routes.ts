@@ -1,14 +1,14 @@
-const express = require('express');
-const userController = require('../controllers/user.controller');
-const validate = require('../middlewares/validate.middleware');
-const authMiddleware = require('../middlewares/auth.middleware');
-const { updateUserSchema } = require('../validators/user.validator');
+import express from 'express';
+import UserController from '../controllers/user.controller';
+import validate from '../middlewares/validate.middleware';
+import authMiddleware from '../middlewares/auth.middleware';
+import { updateUserSchema } from '../validators/user.validator';
 
 const router = express.Router();
 
-router.get('/:id', userController.getProfile);
-router.put('/:id', authMiddleware, validate(updateUserSchema), userController.updateProfile);
-router.post('/:id/follow', authMiddleware, userController.follow);
-router.delete('/:id/follow', authMiddleware, userController.unfollow);
+router.get('/:id', UserController.getProfile);
+router.put('/:id', authMiddleware, validate(updateUserSchema), UserController.updateProfile);
+router.post('/:id/follow', authMiddleware, UserController.follow);
+router.delete('/:id/follow', authMiddleware, UserController.unfollow);
 
-module.exports = router;
+export default router;

@@ -1,7 +1,7 @@
-const prisma = require('../config/database');
+import prisma from '../config/database';
 
 class UserService {
-  static async getUserById(id) {
+  static async getUserById(id: string) {
     const user = await prisma.user.findUnique({
       where: { id },
     });
@@ -11,7 +11,7 @@ class UserService {
     return this.excludePassword(user);
   }
 
-  static async updateUser(id, data) {
+  static async updateUser(id: string, data: Record<string, any>) {
     // Check if username is taken
     if (data.username) {
       const existing = await prisma.user.findFirst({
@@ -29,7 +29,7 @@ class UserService {
     return this.excludePassword(user);
   }
 
-  static async followUser(followerId, authorId) {
+  static async followUser(followerId: string, authorId: string) {
     if (followerId === authorId) {
       throw new Error('Cannot follow yourself');
     }
@@ -59,7 +59,7 @@ class UserService {
     return { message: 'Successfully followed author' };
   }
 
-  static async unfollowUser(followerId, authorId) {
+  static async unfollowUser(followerId: string, authorId: string) {
     const existingFollow = await prisma.authorFollow.findFirst({
       where: { follower_id: followerId, author_id: authorId },
     });
@@ -85,10 +85,10 @@ class UserService {
     return { message: 'Successfully unfollowed author' };
   }
 
-  static excludePassword(user) {
+  static excludePassword(user: Record<string, any>) {
     const { password_hash, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
 }
 
-module.exports = UserService;
+export default UserService;

@@ -1,36 +1,37 @@
-const notificationService = require('../services/notification.service');
+import { Request, Response, NextFunction } from 'express';
+import NotificationService from '../services/notification.service';
 
 class NotificationController {
-  static async getAll(req, res, next) {
+  static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const notifications = await notificationService.getMyNotifications(req.user.id);
+      const notifications = await NotificationService.getMyNotifications((req as any).user.id);
       res.json(notifications);
     } catch (error) {
       next(error);
     }
   }
 
-  static async unreadCount(req, res, next) {
+  static async unreadCount(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await notificationService.getUnreadCount(req.user.id);
+      const result = await NotificationService.getUnreadCount((req as any).user.id);
       res.json(result);
     } catch (error) {
       next(error);
     }
   }
 
-  static async readAll(req, res, next) {
+  static async readAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await notificationService.markAllRead(req.user.id);
+      const result = await NotificationService.markAllRead((req as any).user.id);
       res.json(result);
     } catch (error) {
       next(error);
     }
   }
 
-  static async readOne(req, res, next) {
+  static async readOne(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await notificationService.markAsRead(req.params.id, req.user.id);
+      const result = await NotificationService.markAsRead(req.params.id as string, (req as any).user.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -38,4 +39,4 @@ class NotificationController {
   }
 }
 
-module.exports = NotificationController;
+export default NotificationController;

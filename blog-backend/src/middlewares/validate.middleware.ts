@@ -1,6 +1,7 @@
-const { ZodError } = require('zod');
+import { Request, Response, NextFunction } from 'express';
+import { ZodError, ZodSchema } from 'zod';
 
-const validate = (schema) => (req, res, next) => {
+const validate = (schema: ZodSchema) => (req: Request, res: Response, next: NextFunction) => {
   try {
     schema.parse({
       body: req.body,
@@ -12,11 +13,11 @@ const validate = (schema) => (req, res, next) => {
     if (err instanceof ZodError) {
       return res.status(400).json({
         message: 'Validation Error',
-        errors: err.errors,
+        errors: err.issues,
       });
     }
     next(err);
   }
 };
 
-module.exports = validate;
+export default validate;

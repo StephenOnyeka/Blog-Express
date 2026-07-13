@@ -1,6 +1,6 @@
-const prisma = require('../config/database');
-const { sendMail } = require('../utils/mailer');
-const env = require('../config/env');
+import prisma from '../config/database';
+import { sendMail } from '../utils/mailer';
+import env from '../config/env';
 
 class CronService {
   // Weekly digest: email verified newsletter subscribers the last 7 days of articles.
@@ -40,14 +40,14 @@ class CronService {
         });
         sent += 1;
       } catch (error) {
-        console.error(`Digest send failed for ${sub.email}:`, error.message);
+        console.error(`Digest send failed for ${sub.email}:`, (error as Error).message);
       }
     }
 
     return { sent, articles: recentArticles.length };
   }
 
-  static buildDigestHtml(articles) {
+  static buildDigestHtml(articles: Array<Record<string, any>>) {
     const items = articles
       .map(
         (a) =>
@@ -88,4 +88,4 @@ class CronService {
   }
 }
 
-module.exports = CronService;
+export default CronService;

@@ -1,16 +1,16 @@
-const express = require('express');
-const articleController = require('../controllers/article.controller');
-const validate = require('../middlewares/validate.middleware');
-const authMiddleware = require('../middlewares/auth.middleware');
-const { createArticleSchema, updateArticleSchema } = require('../validators/article.validator');
+import express from 'express';
+import ArticleController from '../controllers/article.controller';
+import validate from '../middlewares/validate.middleware';
+import authMiddleware from '../middlewares/auth.middleware';
+import { createArticleSchema, updateArticleSchema } from '../validators/article.validator';
 
 const router = express.Router();
 
-router.get('/', articleController.getAll);
-router.get('/:id', articleController.getById);
+router.get('/', ArticleController.getAll);
+router.get('/:id', ArticleController.getById);
 
-router.post('/', authMiddleware, validate(createArticleSchema), articleController.create);
-router.put('/:id', authMiddleware, validate(updateArticleSchema), articleController.update);
-router.delete('/:id', authMiddleware, articleController.delete);
+router.post('/', authMiddleware, validate(createArticleSchema), ArticleController.create);
+router.put('/:id', authMiddleware, validate(updateArticleSchema), ArticleController.update);
+router.delete('/:id', authMiddleware, ArticleController.delete);
 
-module.exports = router;
+export default router;

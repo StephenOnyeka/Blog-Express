@@ -1,14 +1,14 @@
-const express = require('express');
-const notificationController = require('../controllers/notification.controller');
-const authMiddleware = require('../middlewares/auth.middleware');
+import express from 'express';
+import NotificationController from '../controllers/notification.controller';
+import authMiddleware from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
 router.use(authMiddleware);
 
-router.get('/', notificationController.getAll);
-router.get('/unread-count', notificationController.unreadCount);
-router.patch('/read-all', notificationController.readAll);
-router.patch('/:id/read', notificationController.readOne);
+router.get('/', NotificationController.getAll);
+router.get('/unread-count', NotificationController.unreadCount);
+router.patch('/read-all', NotificationController.readAll);
+router.patch('/:id/read', NotificationController.readOne);
 
-module.exports = router;
+export default router;

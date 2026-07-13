@@ -1,11 +1,12 @@
-const userService = require('../services/user.service');
+import { Request, Response, NextFunction } from 'express';
+import UserService from '../services/user.service';
 
 class UserController {
-  static async getProfile(req, res, next) {
+  static async getProfile(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await userService.getUserById(req.params.id);
+      const user = await UserService.getUserById(req.params.id as string);
       res.json(user);
-    } catch (error) {
+    } catch (error: any) {
       if (error.message === 'User not found') {
         return res.status(404).json({ message: error.message });
       }
@@ -13,16 +14,16 @@ class UserController {
     }
   }
 
-  static async updateProfile(req, res, next) {
+  static async updateProfile(req: Request, res: Response, next: NextFunction) {
     try {
       // Users can only update their own profile
-      if (req.user.id !== req.params.id) {
+      if ((req as any).user.id !== req.params.id) {
         return res.status(403).json({ message: 'Forbidden' });
       }
 
-      const updatedUser = await userService.updateUser(req.user.id, req.body);
+      const updatedUser = await UserService.updateUser((req as any).user.id, req.body);
       res.json(updatedUser);
-    } catch (error) {
+    } catch (error: any) {
       if (error.message === 'Username is already taken') {
         return res.status(409).json({ message: error.message });
       }
@@ -30,11 +31,11 @@ class UserController {
     }
   }
 
-  static async follow(req, res, next) {
+  static async follow(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await userService.followUser(req.user.id, req.params.id);
+      const result = await UserService.followUser((req as any).user.id, req.params.id as string);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       if (error.message === 'Cannot follow yourself') {
         return res.status(400).json({ message: error.message });
       }
@@ -42,9 +43,9 @@ class UserController {
     }
   }
 
-  static async unfollow(req, res, next) {
+  static async unfollow(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await userService.unfollowUser(req.user.id, req.params.id);
+      const result = await UserService.unfollowUser((req as any).user.id, req.params.id as string);
       res.json(result);
     } catch (error) {
       next(error);
@@ -52,4 +53,4 @@ class UserController {
   }
 }
 
-module.exports = UserController;
+export default UserController;

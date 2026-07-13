@@ -1,29 +1,30 @@
-const articleService = require('../services/article.service');
+import { Request, Response, NextFunction } from 'express';
+import ArticleService from '../services/article.service';
 
 class ArticleController {
-  static async create(req, res, next) {
+  static async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const article = await articleService.createArticle(req.user.id, req.body);
+      const article = await ArticleService.createArticle((req as any).user.id, req.body);
       res.status(201).json(article);
     } catch (error) {
       next(error);
     }
   }
 
-  static async getAll(req, res, next) {
+  static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await articleService.getArticles(req.query);
+      const result = await ArticleService.getArticles(req.query);
       res.json(result);
     } catch (error) {
       next(error);
     }
   }
 
-  static async getById(req, res, next) {
+  static async getById(req: Request, res: Response, next: NextFunction) {
     try {
-      const article = await articleService.getArticleById(req.params.id);
+      const article = await ArticleService.getArticleById(req.params.id as string);
       res.json(article);
-    } catch (error) {
+    } catch (error: any) {
       if (error.message === 'Article not found') {
         return res.status(404).json({ message: error.message });
       }
@@ -31,22 +32,22 @@ class ArticleController {
     }
   }
 
-  static async update(req, res, next) {
+  static async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const article = await articleService.updateArticle(req.params.id, req.user.id, req.body);
+      const article = await ArticleService.updateArticle(req.params.id as string, (req as any).user.id, req.body);
       res.json(article);
-    } catch (error) {
+    } catch (error: any) {
       if (error.message === 'Article not found') return res.status(404).json({ message: error.message });
       if (error.message === 'Forbidden') return res.status(403).json({ message: error.message });
       next(error);
     }
   }
 
-  static async delete(req, res, next) {
+  static async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await articleService.deleteArticle(req.params.id, req.user.id);
+      const result = await ArticleService.deleteArticle(req.params.id as string, (req as any).user.id);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       if (error.message === 'Article not found') return res.status(404).json({ message: error.message });
       if (error.message === 'Forbidden') return res.status(403).json({ message: error.message });
       next(error);
@@ -54,4 +55,4 @@ class ArticleController {
   }
 }
 
-module.exports = ArticleController;
+export default ArticleController;
