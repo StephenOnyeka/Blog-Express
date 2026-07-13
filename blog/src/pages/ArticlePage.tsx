@@ -89,7 +89,7 @@ export default function ArticlePage() {
         style={{ width: `${scrollProgress}%` }}
       />
 
-      <div className="max-w-[740px] mx-auto px-6 py-8">
+      <div className="max-w-[740px] mx-auto px-6 py-8 overflow-x-hidden">
         {/* Back button */}
         <button
           onClick={() => navigate(-1)}
@@ -195,7 +195,7 @@ export default function ArticlePage() {
         </div>
 
         {/* Body */}
-        <div className="prose prose-lg max-w-none text-neutral-900 leading-[1.9] [&_p]:mb-6 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-10 [&_h2]:mb-4 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mt-8 [&_h3]:mb-3 [&_a]:text-green-700 [&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-neutral-300 [&_blockquote]:pl-5 [&_blockquote]:italic [&_blockquote]:text-neutral-600 [&_img]:rounded-lg [&_img]:my-6">
+        <div className="prose prose-lg max-w-none text-neutral-900 leading-[1.9] break-words [&_*]:max-w-full [&_p]:mb-6 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-10 [&_h2]:mb-4 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mt-8 [&_h3]:mb-3 [&_a]:text-green-700 [&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-neutral-300 [&_blockquote]:pl-5 [&_blockquote]:italic [&_blockquote]:text-neutral-600 [&_img]:rounded-lg [&_img]:my-6 [&_pre]:overflow-x-auto [&_table]:block [&_table]:overflow-x-auto">
           {renderBody(article.body)}
         </div>
 
