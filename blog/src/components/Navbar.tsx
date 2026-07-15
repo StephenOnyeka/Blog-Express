@@ -2,16 +2,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { SearchNormal1, Edit, Notification, CloseCircle } from "iconsax-react";
 import { useAuth } from "../context/AuthContext";
+import { useAuthGate } from "../context/AuthGateContext";
 import { api } from "../lib/api";
 
-interface NavbarProps {
-  onSignIn?: () => void;
-}
-
-export default function Navbar({ onSignIn }: NavbarProps) {
+export default function Navbar() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const { isLoggedIn, user } = useAuth();
+  const { openAuthModal } = useAuthGate();
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
@@ -102,22 +100,22 @@ export default function Navbar({ onSignIn }: NavbarProps) {
             </>
           ) : (
             <>
-              <Link
-                to="/write"
+              <button
                 className="flex items-center gap-1.5 text-neutral-500 text-[15px] font-normal transition-colors py-2 hover:text-neutral-900"
+                onClick={openAuthModal}
               >
                 <Edit size={18} variant="Linear" color="currentColor" />
                 <span>Write</span>
-              </Link>
+              </button>
               <button
                 className="text-sm text-neutral-500 font-normal py-2 transition-colors hover:text-neutral-900"
-                onClick={onSignIn}
+                onClick={openAuthModal}
               >
                 Sign in
               </button>
               <button
                 className="bg-neutral-900 text-white rounded-full px-5 py-2 text-sm font-medium transition-opacity hover:opacity-85"
-                onClick={onSignIn}
+                onClick={openAuthModal}
               >
                 Get started
               </button>

@@ -5,11 +5,15 @@ import PageTemplate from '../components/PageTemplate';
 import ArticleCard from '../components/ArticleCard';
 import { AUTHORS, ARTICLES } from '../data/mockData';
 import { getUserArticles, CURRENT_USER as ME } from '../data/articleStore';
+import { useAuth } from '../context/AuthContext';
+import { useAuthGate } from '../context/AuthGateContext';
 
 export default function ProfilePage() {
   const { username } = useParams<{ username: string }>();
   const [activeTab, setActiveTab] = useState<'home' | 'lists' | 'about'>('home');
   const [following, setFollowing] = useState(false);
+  const { isLoggedIn } = useAuth();
+  const { openAuthModal } = useAuthGate();
 
   const isOwn = username === 'me';
   const author = isOwn
@@ -67,7 +71,10 @@ export default function ProfilePage() {
                       ? 'bg-neutral-900 text-white border-neutral-900 hover:opacity-80'
                       : 'border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white'
                   }`}
-                  onClick={() => setFollowing(v => !v)}
+                  onClick={() => {
+                    if (!isLoggedIn) { openAuthModal(); return; }
+                    setFollowing(v => !v);
+                  }}
                 >
                   {following ? 'Following' : 'Follow'}
                 </button>

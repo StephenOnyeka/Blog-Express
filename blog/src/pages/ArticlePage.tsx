@@ -9,12 +9,16 @@ import PageTemplate from '../components/PageTemplate';
 import ArticleCard from '../components/ArticleCard';
 import { ARTICLES, formatClaps } from '../data/mockData';
 import { getUserArticles } from '../data/articleStore';
+import { useAuth } from '../context/AuthContext';
+import { useAuthGate } from '../context/AuthGateContext';
 
 const toolbarBtn = 'flex items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-neutral-900 cursor-pointer';
 
 export default function ArticlePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
+  const { openAuthModal } = useAuthGate();
   const article = ARTICLES.find(a => a.id === id) ?? getUserArticles().find(a => a.id === id);
 
   const [claps, setClaps] = useState(0);
@@ -133,7 +137,10 @@ export default function ArticlePage() {
                   </Link>
                   <button
                     className="text-sm text-green-700 hover:text-green-900 transition-colors"
-                    onClick={() => setFollowing(v => !v)}
+                    onClick={() => {
+                      if (!isLoggedIn) { openAuthModal(); return; }
+                      setFollowing(v => !v);
+                    }}
                   >
                     {following ? '· Following' : '· Follow'}
                   </button>
@@ -151,6 +158,7 @@ export default function ArticlePage() {
               <button
                 className={`${toolbarBtn} ${clapped ? 'text-red-600' : ''}`}
                 onClick={() => {
+                  if (!isLoggedIn) { openAuthModal(); return; }
                   setClapped(v => !v);
                   setClaps(c => clapped ? c - 1 : c + 1);
                 }}
@@ -168,7 +176,11 @@ export default function ArticlePage() {
               </button>
               <button
                 className={`${toolbarBtn} ${saved ? 'text-green-700' : ''}`}
-                onClick={() => { setSaved(v => !v); showToast(saved ? 'Removed from list' : 'Saved to reading list'); }}
+                onClick={() => {
+                  if (!isLoggedIn) { openAuthModal(); return; }
+                  setSaved(v => !v);
+                  showToast(saved ? 'Removed from list' : 'Saved to reading list');
+                }}
                 aria-label="Save"
               >
                 <Save2 size={20} variant={saved ? 'Bold' : 'Linear'} color="currentColor" />
@@ -204,6 +216,7 @@ export default function ArticlePage() {
           <button
             className={`flex items-center gap-2 text-base font-medium transition-colors ${clapped ? 'text-red-600' : 'text-neutral-500 hover:text-neutral-900'}`}
             onClick={() => {
+              if (!isLoggedIn) { openAuthModal(); return; }
               setClapped(v => !v);
               setClaps(c => clapped ? c - 1 : c + 1);
             }}
@@ -229,7 +242,11 @@ export default function ArticlePage() {
             </button>
             <button
               className={`flex items-center gap-1.5 transition-colors ${saved ? 'text-green-700' : 'text-neutral-400 hover:text-neutral-900'}`}
-              onClick={() => { setSaved(v => !v); showToast(saved ? 'Removed from list' : 'Saved!'); }}
+              onClick={() => {
+                if (!isLoggedIn) { openAuthModal(); return; }
+                setSaved(v => !v);
+                showToast(saved ? 'Removed from list' : 'Saved!');
+              }}
               aria-label="Save"
             >
               <Save2 size={20} variant={saved ? 'Bold' : 'Linear'} color="currentColor" />
@@ -255,7 +272,10 @@ export default function ArticlePage() {
                     ? 'bg-neutral-900 text-white border-neutral-900 hover:opacity-80'
                     : 'border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white'
                 }`}
-                onClick={() => setFollowing(v => !v)}
+                onClick={() => {
+                  if (!isLoggedIn) { openAuthModal(); return; }
+                  setFollowing(v => !v);
+                }}
               >
                 {following ? 'Following' : 'Follow'}
               </button>
