@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { SearchNormal1, Edit, Notification, CloseCircle } from "iconsax-react";
+import { SearchNormal1, Edit, Notification, CloseCircle, Eye, EyeSlash } from "iconsax-react";
 import { useAuth } from "../context/AuthContext";
 import { useAuthGate } from "../context/AuthGateContext";
 import { api, API_BASE_URL } from "../lib/api";
@@ -148,6 +148,7 @@ export function AuthModal({
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const { login, register } = useAuth();
 
@@ -253,14 +254,28 @@ export function AuthModal({
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <input
-            className="w-full border-b border-neutral-300 py-2.5 text-[15px] text-neutral-900 mb-6 bg-transparent outline-none focus:border-neutral-900 focus:border-b-2 transition-colors"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="relative mb-6">
+            <input
+              className="w-full border-b border-neutral-300 py-2.5 pr-9 text-[15px] text-neutral-900 bg-transparent outline-none focus:border-neutral-900 focus:border-b-2 transition-colors"
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="absolute right-0 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-900 transition-colors"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <EyeSlash size={18} variant="Linear" color="currentColor" />
+              ) : (
+                <Eye size={18} variant="Linear" color="currentColor" />
+              )}
+            </button>
+          </div>
           <button
             className="w-full bg-neutral-900 text-white rounded-full py-3 mt-4 text-[15px] font-medium transition-opacity hover:opacity-85"
             type="submit"

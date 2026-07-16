@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { AuthProvider } from './context/AuthContext';
 import { AuthGateProvider } from './context/AuthGateContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -12,6 +13,7 @@ import AuthCallbackPage from './pages/AuthCallbackPage';
 export default function App() {
   return (
     <AuthProvider>
+      <Toaster position="top-right" richColors closeButton />
       <Router>
         <AuthGateProvider>
           <Routes>
