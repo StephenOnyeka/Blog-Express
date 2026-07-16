@@ -2,6 +2,7 @@ import app from './app';
 import env from './config/env';
 import prisma from './config/database';
 import startJobs from './jobs/cleanup.job';
+import './workers/notification.worker';
 
 const startServer = async () => {
   try {
