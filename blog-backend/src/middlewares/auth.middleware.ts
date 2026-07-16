@@ -1,34 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import env from '../config/env';
-import prisma from '../config/database';
+import passport from '../config/passport';
 
-const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ message: 'Unauthorized: No token provided' });
+const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  passport.authenticate('jwt', { session: false }, (err: any, user: any) => {
+    if (err) {
+      return next(err);
     }
-
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, env.JWT_SECRET) as { sub?: string; id?: string };
-
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.sub || decoded.id },
-    });
-
     if (!user) {
-      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+      return res.status(401).json({ message: 'Unauthorized: Invalid or missing token' });
     }
-
     (req as any).user = user;
     next();
-  } catch (error: any) {
-    if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ message: 'Unauthorized: Token expired' });
-    }
-    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
-  }
+  })(req, res, next);
 };
 
 export default authMiddleware;

@@ -7,6 +7,7 @@ import ArticlePage from './pages/ArticlePage';
 import ProfilePage from './pages/ProfilePage';
 import WritePage from './pages/WritePage';
 import SearchPage from './pages/SearchPage';
+import AuthCallbackPage from './pages/AuthCallbackPage';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
               }
             />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/auth/callback" element={<AuthCallbackPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </AuthGateProvider>

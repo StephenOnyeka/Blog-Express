@@ -36,12 +36,12 @@ class AuthService {
     return { user: this.excludePassword(user), token };
   }
 
-  static async login({ email, password }: { email: string; password: string }) {
+  static async validateCredentials({ email, password }: { email: string; password: string }) {
     const user = await prisma.user.findUnique({
       where: { email },
     });
 
-    if (!user) {
+    if (!user || !user.password_hash) {
       throw new Error('Invalid email or password');
     }
 
@@ -50,8 +50,61 @@ class AuthService {
       throw new Error('Invalid email or password');
     }
 
+    return user;
+  }
+
+  static async login({ email, password }: { email: string; password: string }) {
+    const user = await this.validateCredentials({ email, password });
     const token = this.generateToken(user.id);
     return { user: this.excludePassword(user), token };
+  }
+
+  static async findOrCreateGoogleUser(profile: {
+    googleId: string;
+    email: string;
+    name: string;
+    avatar?: string;
+  }) {
+    const existingByGoogle = await prisma.user.findUnique({
+      where: { google_id: profile.googleId },
+    });
+    if (existingByGoogle) {
+      return existingByGoogle;
+    }
+
+    // Link Google to an existing local account with the same email
+    const existingByEmail = await prisma.user.findUnique({
+      where: { email: profile.email },
+    });
+    if (existingByEmail) {
+      return prisma.user.update({
+        where: { id: existingByEmail.id },
+        data: { google_id: profile.googleId },
+      });
+    }
+
+    return prisma.user.create({
+      data: {
+        name: profile.name,
+        username: await this.generateUniqueUsername(profile.email),
+        email: profile.email,
+        google_id: profile.googleId,
+        provider: 'google',
+        avatar: profile.avatar,
+      },
+    });
+  }
+
+  static async generateUniqueUsername(email: string) {
+    const base = email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '').slice(0, 40) || 'user';
+    let candidate = base;
+    let suffix = 0;
+    // Loop until we find a free username
+    while (await prisma.user.findUnique({ where: { username: candidate } })) {
+      suffix += 1;
+      candidate = `${base}${suffix}`;
+    }
+    return candidate;
   }
 
   static generateToken(userId: string) {

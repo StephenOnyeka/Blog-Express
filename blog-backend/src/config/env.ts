@@ -12,6 +12,9 @@ const envSchema = z.object({
   RESEND_API: z.string(),
   FROM_EMAIL: z.string().email().default('onboarding@resend.dev'),
   FRONTEND_URL: z.string().url().default('http://localhost:5173'),
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
+  GOOGLE_CALLBACK_URL: z.string().url().default('http://localhost:8080/api/auth/google/callback'),
 });
 
 const _env = envSchema.safeParse(process.env);

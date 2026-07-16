@@ -7,6 +7,7 @@ interface AuthContextType {
   isLoggedIn: boolean;
   login: (data: any) => Promise<void>;
   register: (data: any) => Promise<void>;
+  loginWithToken: (token: string) => void;
   logout: () => void;
   isLoading: boolean;
 }
@@ -51,6 +52,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(user);
   };
 
+  const loginWithToken = (newToken: string) => {
+    localStorage.setItem('token', newToken);
+    setToken(newToken);
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
@@ -59,7 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return (
     <AuthContext.Provider value={{
-      user, token, isLoggedIn: !!user, login, register, logout, isLoading
+      user, token, isLoggedIn: !!user, login, register, loginWithToken, logout, isLoading
     }}>
       {children}
     </AuthContext.Provider>

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import AuthService from '../services/auth.service';
+import env from '../config/env';
 
 class AuthController {
   static async register(req: Request, res: Response, next: NextFunction) {
@@ -32,6 +33,15 @@ class AuthController {
     } catch (error) {
       next(error);
     }
+  }
+
+  // Google OAuth callback: issue a JWT and redirect back to the frontend
+  static googleCallback(req: Request, res: Response) {
+    const user = (req as any).user;
+    const token = AuthService.generateToken(user.id);
+    const redirectUrl = new URL('/auth/callback', env.FRONTEND_URL);
+    redirectUrl.searchParams.set('token', token);
+    res.redirect(redirectUrl.toString());
   }
 }
 
