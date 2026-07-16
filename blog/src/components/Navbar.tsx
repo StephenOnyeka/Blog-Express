@@ -1,32 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SearchNormal1, Edit, Notification, CloseCircle, Eye, EyeSlash } from "iconsax-react";
 import { useAuth } from "../context/AuthContext";
 import { useAuthGate } from "../context/AuthGateContext";
-import { api, API_BASE_URL } from "../lib/api";
+import { API_BASE_URL } from "../lib/api";
+import { useUnreadNotificationCount, useMarkAllNotificationsRead } from "../hooks/queries";
 
 export default function Navbar() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const { isLoggedIn, user } = useAuth();
   const { openAuthModal } = useAuthGate();
-  const [unreadCount, setUnreadCount] = useState(0);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      const fetchNotifications = async () => {
-        try {
-          const res = await api.get("/notifications/unread-count");
-          setUnreadCount(res.data.count);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-      fetchNotifications();
-      const interval = setInterval(fetchNotifications, 30000);
-      return () => clearInterval(interval);
-    }
-  }, [isLoggedIn]);
+  const { data: unreadData } = useUnreadNotificationCount(isLoggedIn);
+  const markAllRead = useMarkAllNotificationsRead();
+  const unreadCount = unreadData?.count ?? 0;
 
   return (
     <nav className="sticky top-0 z-[100] bg-white border-b border-neutral-200 py-3">
@@ -68,10 +55,7 @@ export default function Navbar() {
               <button
                 className="w-9 h-9 rounded-full overflow-hidden cursor-pointer bg-neutral-100 flex items-center justify-center shrink-0 relative"
                 aria-label="Notifications"
-                onClick={async () => {
-                  await api.patch("/notifications/read-all");
-                  setUnreadCount(0);
-                }}
+                onClick={() => markAllRead.mutate()}
               >
                 <Notification
                   size={20}
