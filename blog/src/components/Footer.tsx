@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { api } from '../lib/api';
+import { useSubscribe } from '../hooks/queries';
 
 export default function Footer() {
   const links = [
@@ -8,19 +8,22 @@ export default function Footer() {
   ];
 
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
+  const subscribeMutation = useSubscribe();
+  const status = subscribeMutation.isPending
+    ? 'loading'
+    : subscribeMutation.isSuccess
+      ? 'done'
+      : subscribeMutation.isError
+        ? 'error'
+        : 'idle';
 
-  const handleSubscribe = async (e: React.FormEvent) => {
+  const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
-    setStatus('loading');
-    try {
-      await api.post('/subscriptions', { email, newsletter: true });
-      setStatus('done');
-      setEmail('');
-    } catch {
-      setStatus('error');
-    }
+    subscribeMutation.mutate(
+      { email, newsletter: true },
+      { onSuccess: () => setEmail('') },
+    );
   };
 
   return (
@@ -37,7 +40,7 @@ export default function Footer() {
             type="email"
             placeholder="you@example.com"
             value={email}
-            onChange={e => { setEmail(e.target.value); setStatus('idle'); }}
+            onChange={e => { setEmail(e.target.value); if (status !== 'idle') subscribeMutation.reset(); }}
             required
             className="border border-neutral-200 rounded-full px-4 py-2 text-sm outline-none font-sans min-w-[220px] focus:border-neutral-400"
           />
