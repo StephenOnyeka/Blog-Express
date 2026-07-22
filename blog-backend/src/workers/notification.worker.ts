@@ -1,5 +1,5 @@
 import { Worker } from 'bullmq';
-import redisClient from '../config/redis';
+import { bullConnection } from '../config/redis';
 import NotificationService from '../services/notification.service';
 import prisma from '../config/database';
 
@@ -23,7 +23,7 @@ export const notificationWorker = new Worker(
       }
     }
   },
-  { connection: redisClient }
+  { connection: bullConnection }
 );
 
 notificationWorker.on('completed', (job) => {

@@ -1,13 +1,13 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "version": "1.0.0",
     "title": "Blog API",
-    "description": "REST API for the Blog application. Import this file into Postman (Import → File) to generate a ready-to-use collection."
+    "version": "1.0.0",
+    "description": "REST API for the Blog application. Authenticate via the `Authorize` button using a JWT bearer token returned by /api/auth/login. Import openapi.json into Postman, or browse it live at /docs."
   },
   "servers": [
     {
-      "url": "http://localhost:8080/api",
+      "url": "http://localhost:8080",
       "description": "Local development"
     }
   ],
@@ -42,8 +42,7 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "JWT",
-        "description": "Paste the `token` returned by /auth/login or /auth/register."
+        "bearerFormat": "JWT"
       }
     },
     "schemas": {
@@ -415,7 +414,8 @@
             "$ref": "#/components/schemas/User"
           },
           "token": {
-            "type": "string"
+            "type": "string",
+            "description": "JWT bearer token"
           }
         },
         "required": [
@@ -434,17 +434,19 @@
           "message"
         ]
       },
-      "ErrorResponse": {
+      "Error": {
         "type": "object",
         "properties": {
           "message": {
-            "type": "string"
+            "type": "string",
+            "example": "Unauthorized"
           },
           "errors": {
             "type": "array",
             "items": {
               "nullable": true
-            }
+            },
+            "description": "Present on 400 validation errors (zod issues)"
           }
         },
         "required": [
@@ -455,7 +457,39 @@
     "parameters": {}
   },
   "paths": {
-    "/auth/register": {
+    "/health": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Liveness probe",
+        "responses": {
+          "200": {
+            "description": "API is running",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/register": {
       "post": {
         "tags": [
           "Auth"
@@ -482,11 +516,11 @@
             }
           },
           "400": {
-            "description": "Validation error",
+            "description": "Invalid request body",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -494,7 +528,7 @@
         }
       }
     },
-    "/auth/login": {
+    "/api/auth/login": {
       "post": {
         "tags": [
           "Auth"
@@ -520,12 +554,22 @@
               }
             }
           },
-          "401": {
-            "description": "Invalid credentials",
+          "400": {
+            "description": "Invalid request body",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -533,7 +577,7 @@
         }
       }
     },
-    "/auth/me": {
+    "/api/auth/me": {
       "get": {
         "tags": [
           "Auth"
@@ -556,11 +600,11 @@
             }
           },
           "401": {
-            "description": "Unauthorized",
+            "description": "Not authenticated",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -568,7 +612,7 @@
         }
       }
     },
-    "/auth/google": {
+    "/api/auth/google": {
       "get": {
         "tags": [
           "Auth"
@@ -581,7 +625,7 @@
         }
       }
     },
-    "/auth/google/callback": {
+    "/api/auth/google/callback": {
       "get": {
         "tags": [
           "Auth"
@@ -594,7 +638,7 @@
         }
       }
     },
-    "/users/{id}": {
+    "/api/users/{id}": {
       "get": {
         "tags": [
           "Users"
@@ -628,7 +672,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -677,12 +721,22 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Invalid request body",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -690,7 +744,7 @@
         }
       }
     },
-    "/users/{id}/follow": {
+    "/api/users/{id}/follow": {
       "post": {
         "tags": [
           "Users"
@@ -725,11 +779,11 @@
             }
           },
           "401": {
-            "description": "Unauthorized",
+            "description": "Not authenticated",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -770,11 +824,11 @@
             }
           },
           "401": {
-            "description": "Unauthorized",
+            "description": "Not authenticated",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -782,7 +836,7 @@
         }
       }
     },
-    "/articles": {
+    "/api/articles": {
       "get": {
         "tags": [
           "Articles"
@@ -889,12 +943,22 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Invalid request body",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -904,7 +968,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -912,7 +976,7 @@
         }
       }
     },
-    "/articles/{id}": {
+    "/api/articles/{id}": {
       "get": {
         "tags": [
           "Articles"
@@ -946,7 +1010,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -995,12 +1059,22 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Invalid request body",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -1041,11 +1115,11 @@
             }
           },
           "401": {
-            "description": "Unauthorized",
+            "description": "Not authenticated",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -1053,7 +1127,7 @@
         }
       }
     },
-    "/notifications": {
+    "/api/notifications": {
       "get": {
         "tags": [
           "Notifications"
@@ -1077,11 +1151,21 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/notifications/unread-count": {
+    "/api/notifications/unread-count": {
       "get": {
         "tags": [
           "Notifications"
@@ -1110,11 +1194,21 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/notifications/read-all": {
+    "/api/notifications/read-all": {
       "patch": {
         "tags": [
           "Notifications"
@@ -1135,11 +1229,21 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/notifications/{id}/read": {
+    "/api/notifications/{id}/read": {
       "patch": {
         "tags": [
           "Notifications"
@@ -1172,11 +1276,21 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/subscriptions": {
+    "/api/subscriptions": {
       "post": {
         "tags": [
           "Subscriptions"
@@ -1203,11 +1317,11 @@
             }
           },
           "400": {
-            "description": "Validation error",
+            "description": "Invalid request body",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -1215,7 +1329,7 @@
         }
       }
     },
-    "/subscriptions/verify": {
+    "/api/subscriptions/verify": {
       "get": {
         "tags": [
           "Subscriptions"
@@ -1246,7 +1360,7 @@
         }
       }
     },
-    "/subscriptions/unsubscribe": {
+    "/api/subscriptions/unsubscribe": {
       "delete": {
         "tags": [
           "Subscriptions"
@@ -1270,38 +1384,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MessageResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/health": {
-      "get": {
-        "tags": [
-          "System"
-        ],
-        "summary": "Health check",
-        "responses": {
-          "200": {
-            "description": "API is running",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "status",
-                    "message"
-                  ]
                 }
               }
             }

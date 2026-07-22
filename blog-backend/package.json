@@ -15,7 +15,7 @@
     "test": "tsx --test tests/**/*.test.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "docs:postman": "tsx src/docs/generate.ts"
+    "openapi:export": "tsx src/scripts/exportOpenApi.ts"
   },
   "keywords": [],
   "author": "",
@@ -45,6 +45,7 @@
     "rate-limit-redis": "^5.0.0",
     "redis": "^6.1.0",
     "resend": "^6.17.2",
+    "swagger-ui-express": "^5.0.1",
     "typescript": "^7.0.2",
     "zod": "^4.4.3"
   },
@@ -59,6 +60,7 @@
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
     "@types/supertest": "^7.2.0",
+    "@types/swagger-ui-express": "^4.1.8",
     "nodemon": "^3.1.14",
     "supertest": "^7.2.2",
     "tsx": "^4.23.1"

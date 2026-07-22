@@ -1,11 +1,11 @@
 import { Queue } from 'bullmq';
-import redisClient from './redis';
+import { bullConnection } from './redis';
 
 // Export queue instances
 export const notificationQueue = new Queue('notifications', {
-  connection: redisClient,
+  connection: bullConnection,
 });
 
 export const cleanupQueue = new Queue('cleanup', {
-  connection: redisClient,
+  connection: bullConnection,
 });
