@@ -81,6 +81,13 @@ class CronService {
     return { ok: true, status: res.status };
   }
 
+  // Keep the database from being suspended by idle-timeout policies on managed
+  // Postgres free tiers (e.g. Supabase pauses after ~7 days without a connection).
+  static async pingDatabase() {
+    await prisma.$queryRaw`SELECT 1`;
+    return { ok: true };
+  }
+
   // Delete empty drafts left untouched for 14+ days.
   static async cleanupStaleDrafts() {    const fourteenDaysAgo = new Date();
     fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);

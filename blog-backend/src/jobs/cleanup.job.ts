@@ -50,6 +50,17 @@ const startJobs = () => {
     }
   }, SIX_DAYS_MS);
 
+  // Database keep-alive — every 6 days, same fixed-interval reasoning as above.
+  setInterval(async () => {
+    try {
+      console.log('Running database keep-alive job...');
+      await CronService.pingDatabase();
+      console.log('Database keep-alive complete.');
+    } catch (error) {
+      console.error('Error running database keep-alive job:', error);
+    }
+  }, SIX_DAYS_MS);
+
   console.log('Background jobs initialized');
 };
 
