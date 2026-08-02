@@ -1,26 +1,30 @@
-import axios from 'axios';
-import { toast } from 'sonner';
+import axios from "axios";
+import { toast } from "sonner";
 
-export const API_BASE_URL = 'http://localhost:8080/api';
+const rawApiBaseUrl =
+  (import.meta.env.VITE_API_BASE_URL as string | undefined) ||
+  "http://localhost:5000/api";
+
+export const API_BASE_URL = rawApiBaseUrl.replace(/\/+$/, "");
 
 // Base instance
 export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 // Add interceptor to include auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Handle 401 and surface network/server errors as toasts
@@ -28,13 +32,13 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     // Always log the full error so clients can inspect it in the console
-    console.error('[API error]', error);
+    console.error("[API error]", error);
 
     const status = error.response?.status;
     const serverMessage = error.response?.data?.message;
 
     if (status === 401) {
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
     }
 
     // 400 (validation) and 401 (bad credentials) are shown inline by the
@@ -45,22 +49,24 @@ api.interceptors.response.use(
       let message: string;
       if (!error.response) {
         // No response = network failure, CORS, or server unreachable
-        message = 'Network error — could not reach the server. Check your connection.';
+        message =
+          "Network error — could not reach the server. Check your connection.";
       } else if (status >= 500) {
-        message = serverMessage || 'Internal server error. Please try again later.';
+        message =
+          serverMessage || "Internal server error. Please try again later.";
       } else if (status === 404) {
-        message = serverMessage || 'Not found (404).';
+        message = serverMessage || "Not found (404).";
       } else if (status === 403) {
-        message = serverMessage || 'You do not have permission to do that.';
+        message = serverMessage || "You do not have permission to do that.";
       } else {
         message = serverMessage || `Request failed (${status}).`;
       }
 
       toast.error(message, {
-        description: 'See the browser console for the full error details.',
+        description: "See the browser console for the full error details.",
       });
     }
 
     return Promise.reject(error);
-  }
+  },
 );
