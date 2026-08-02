@@ -51,7 +51,6 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@asteasolutions/zod-to-openapi": "^9.1.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
