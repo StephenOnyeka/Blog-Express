@@ -71,9 +71,18 @@ class CronService {
     return { success: true };
   }
 
+  // Self-ping the health endpoint so the process stays warm on free-tier hosts
+  // that spin down idle instances (e.g. Render, Railway).
+  static async pingHealthCheck() {
+    const res = await fetch(`${env.SELF_URL}/api/health`, { signal: AbortSignal.timeout(10_000) });
+    if (!res.ok) {
+      throw new Error(`Health check returned ${res.status}`);
+    }
+    return { ok: true, status: res.status };
+  }
+
   // Delete empty drafts left untouched for 14+ days.
-  static async cleanupStaleDrafts() {
-    const fourteenDaysAgo = new Date();
+  static async cleanupStaleDrafts() {    const fourteenDaysAgo = new Date();
     fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
 
     const result = await prisma.article.deleteMany({

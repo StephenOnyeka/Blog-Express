@@ -16,6 +16,8 @@ const envSchema = z.object({
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   GOOGLE_CALLBACK_URL: z.string().url().default('http://localhost:8080/api/auth/google/callback'),
   REDIS_URL: z.string().url().default('redis://localhost:6379'),
+  // Base URL the server can reach itself on, used by the health-check ping job.
+  SELF_URL: z.string().url().default('http://localhost:8080'),
 });
 
 const _env = envSchema.safeParse(process.env);

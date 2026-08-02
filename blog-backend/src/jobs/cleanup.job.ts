@@ -35,6 +35,21 @@ const startJobs = () => {
     }
   });
 
+  // Health-check self-ping — every 6 days.
+  // A true fixed 6-day cadence can't be expressed with 5-field cron (`*/6` on
+  // day-of-month resets each month, giving an uneven gap at month boundaries),
+  // so use a fixed interval instead.
+  const SIX_DAYS_MS = 6 * 24 * 60 * 60 * 1000;
+  setInterval(async () => {
+    try {
+      console.log('Running health-check ping job...');
+      const result = await CronService.pingHealthCheck();
+      console.log(`Health-check ping complete. Status ${result.status}.`);
+    } catch (error) {
+      console.error('Error running health-check ping job:', error);
+    }
+  }, SIX_DAYS_MS);
+
   console.log('Background jobs initialized');
 };
 
