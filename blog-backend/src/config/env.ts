@@ -4,20 +4,20 @@ import { z } from 'zod';
 dotenv.config();
 
 const envSchema = z.object({
-  PORT: z.string().default('8080'),
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  PORT: z.string(),
+  NODE_ENV: z.enum(['development', 'production', 'test']),
   DATABASE_URL: z.string().url(),
   JWT_SECRET: z.string(),
-  JWT_EXPIRES_IN: z.string().default('7d'),
+  JWT_EXPIRES_IN: z.string(),
   RESEND_API: z.string(),
-  FROM_EMAIL: z.string().email().default('onboarding@resend.dev'),
-  FRONTEND_URL: z.string().url().default('http://localhost:5173'),
+  FROM_EMAIL: z.string().email(),
+  FRONTEND_URL: z.string().url(),
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
-  GOOGLE_CALLBACK_URL: z.string().url().default('http://localhost:8080/api/auth/google/callback'),
-  REDIS_URL: z.string().url().default('redis://localhost:6379'),
+  GOOGLE_CALLBACK_URL: z.string().url(),
+  REDIS_URL: z.string().url(),
   // Base URL the server can reach itself on, used by the health-check ping job.
-  SELF_URL: z.string().url().default('http://localhost:8080'),
+  SELF_URL: z.string().url(),
 });
 
 const _env = envSchema.safeParse(process.env);
