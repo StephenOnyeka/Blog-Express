@@ -2,7 +2,8 @@ import axios from "axios";
 import { toast } from "sonner";
 
 const rawApiBaseUrl =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined);
+  (import.meta.env.VITE_API_BASE_URL as string | undefined) ||
+  "http://localhost:8080/api";
 
 export const API_BASE_URL = rawApiBaseUrl.replace(/\/+$/, "");
 
